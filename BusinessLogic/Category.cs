@@ -9,7 +9,7 @@ namespace BusinessLogic
     public class Category
     {
 
-        //TODO: Interface - INameable (id and name), ISortable (sort list by name)
+        
         public int Id { get; set; }
 
         public string Name { get; set; }

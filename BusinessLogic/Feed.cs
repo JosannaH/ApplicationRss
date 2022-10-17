@@ -3,17 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace BusinessLogic
 {
+    [Serializable]
+    [XmlInclude(typeof(Feed))]
     public class Feed
     {
-        public int Id { get; set; }
+        // TODO: shouldn't properties be private??
+
+        // public int Id { get; set; }
         public string Name { get; set; }
         public string Url { get; set; }
         public int UpdateInterval { get; set; }
-        public Category Category { get; set; }
-        public List<Episode> ListOfEpisodes { get; set; }
+        //public Category Category { get; set; }
+        //public List<Episode> ListOfEpisodes { get; set; }
+        public int NumberOfEpisodes { get; set; }
+
       
 
 

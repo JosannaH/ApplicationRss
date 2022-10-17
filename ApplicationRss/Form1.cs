@@ -7,7 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Serialization;
 using BusinessLogic;
+using System.IO;
+using System.Xml;
 
 namespace ApplicationRss
 {
@@ -18,8 +21,11 @@ namespace ApplicationRss
         
         public Form1()
         {
+            // Deserialize
             InitializeComponent();
-            
+
+            cbCategory.Items.Add("Nyheter");
+            cbInterval.Items.Add(2);
             // TODO: populate feeds listview
             // TODO: populate category combobox
         }
@@ -31,16 +37,23 @@ namespace ApplicationRss
             string url = tbUrl.Text;
             string name = tbFeedName.Text;
             int updateInterval = int.Parse(cbInterval.SelectedItem.ToString());
-            Category category = (Category)cbCategory.SelectedItem;
+            //Category category = (Category)cbCategory.SelectedItem;
+            
 
             Feed feed = new Feed();
             feed.Url = url;
             feed.Name = name;
             feed.UpdateInterval = updateInterval;
-            feed.Category = category;
+            //feed.Category = category;
 
-            category.ListOfFeeds.Add(feed);
+            //category.ListOfFeeds.Add(feed);
 
+            SerializerForXml serializerForXml = new SerializerForXml();
+            serializerForXml.SerializeFeed(feed);
+
+            tbUrl.Clear();
+            tbFeedName.Clear();
+            
 
         }
 
@@ -54,6 +67,10 @@ namespace ApplicationRss
 
             // TODO: add validation / exceptions on input
 
+            SerializerForXml serializerForXml = new SerializerForXml();
+            Feed feed = serializerForXml.DeserializeFeed();
+            tbUrl.Text = feed.Url;
+            tbFeedName.Text = feed.Name;
         }
 
         private void btnDeleteFeed_Click(object sender, EventArgs e)
