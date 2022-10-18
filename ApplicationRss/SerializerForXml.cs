@@ -16,7 +16,6 @@ namespace ApplicationRss
         {
             XmlSerializer xmlSerializer = new XmlSerializer(typeof(Feed));
 
-            // append = lägger till i filen
             using (FileStream fileStream = new FileStream("Feeds.xml", FileMode.Append,
                 FileAccess.Write))
             {

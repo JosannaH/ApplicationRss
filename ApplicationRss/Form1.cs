@@ -21,9 +21,11 @@ namespace ApplicationRss
         
         public Form1()
         {
-            // Deserialize
+            
+
             InitializeComponent();
 
+            // TODO: Deserialize
             cbCategory.Items.Add("Nyheter");
             cbInterval.Items.Add(2);
             // TODO: populate feeds listview
@@ -37,15 +39,13 @@ namespace ApplicationRss
             string url = tbUrl.Text;
             string name = tbFeedName.Text;
             int updateInterval = int.Parse(cbInterval.SelectedItem.ToString());
-            //Category category = (Category)cbCategory.SelectedItem;
-            
+            string category =  cbCategory.SelectedItem.ToString();
 
-            Feed feed = new Feed();
-            feed.Url = url;
-            feed.Name = name;
-            feed.UpdateInterval = updateInterval;
-            //feed.Category = category;
+            //add feed to category
+    
+            Feed feed = new Feed(name, url, updateInterval, category);
 
+            // TODO: get category objecy by categoryId, add feed to ListOfFeeds for that category
             //category.ListOfFeeds.Add(feed);
 
             SerializerForXml serializerForXml = new SerializerForXml();
@@ -83,6 +83,12 @@ namespace ApplicationRss
         private void btnSaveCategory_Click(object sender, EventArgs e)
         {
             // TODO: Save in ListOfCategories
+            string categoryName = tbNewCategoryName.Text;
+            Category category = new Category(categoryName);
+
+            //category.Id = method to generate Id
+            category.ListOfCategories.Add(category);
+
             // TODO: Update listview
             // TODO: add validation / exceptions on input
         }

@@ -6,17 +6,30 @@ using System.Threading.Tasks;
 
 namespace BusinessLogic
 {
-    public class Category
+    public class Category : Entity
     {
 
-        
-        public int Id { get; set; }
+        public List<Entity> ListOfFeeds { get; set; }
 
-        public string Name { get; set; }
+        public List<Entity> ListOfCategories { get; set; }
 
-        public List<Feed> ListOfFeeds { get; set; }
+        private int lastUsedId = 0;
 
-        public List<Category> ListOfCategories { get; set; }
+        public Category(string name) : base(name)
+        {
+            base.Id = lastUsedId + 1;
+            lastUsedId = base.Id;
+        }
+
+        private void addFeedToCategoryList(Feed feed, string categoryName)
+        {
+            foreach(Category category in ListOfCategories)
+            {
+                if (category.Name.Equals(categoryName)){
+                    category.ListOfFeeds.Add(feed);
+                }
+            }
+        }
     }
 
     

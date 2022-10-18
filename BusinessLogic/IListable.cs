@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace BusinessLogic
 {
-    internal interface IMyInterface
+    public interface IListable
 
-    //TODO: Interface - INameable (id and name), ISortable (sort list by name)???
+   
     {
+        
+
     }
 }

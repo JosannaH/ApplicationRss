@@ -9,19 +9,41 @@ namespace BusinessLogic
 {
     [Serializable]
     [XmlInclude(typeof(Feed))]
-    public class Feed
+    public class Feed : Entity
     {
-        // TODO: shouldn't properties be private??
-
-        // public int Id { get; set; }
-        public string Name { get; set; }
         public string Url { get; set; }
         public int UpdateInterval { get; set; }
-        //public Category Category { get; set; }
-        //public List<Episode> ListOfEpisodes { get; set; }
-        public int NumberOfEpisodes { get; set; }
+
+        private List<Episode> ListOfEpisodes;
+        public int NumberOfEpisodes => ListOfEpisodes.Count();
+
+        private int lastUsedId = 0;
+
+
+        public Feed(string name, string url, int updateInterval, string category) : base(name)
+        {
+            Url = url;
+            UpdateInterval = updateInterval;
+            base.Id = lastUsedId + 1;
+            lastUsedId = base.Id;
+            // add to categorylist
+        }
+        public Feed()
+        {
+
+        }
 
       
+
+        public List<Episode> GetListOfEpisodesFromXml()
+        {
+            return ListOfEpisodes;
+        }
+
+        public void SetListOfEpisodesToListView()
+        {
+
+        }
 
 
     }
