@@ -12,22 +12,18 @@ namespace BusinessLogic
     public class Feed : Entity
     {
         public string Url { get; set; }
-        public int UpdateInterval { get; set; }
+
+        public string Category { get; set; }
 
         private List<Episode> ListOfEpisodes;
         public int NumberOfEpisodes => ListOfEpisodes.Count();
 
-        private int lastUsedId = 0;
-
-
-        public Feed(string name, string url, int updateInterval, string category) : base(name)
+        public Feed(string name, string url, string category) : base(name)
         {
             Url = url;
-            UpdateInterval = updateInterval;
-            base.Id = lastUsedId + 1;
-            lastUsedId = base.Id;
-            // add to categorylist
+            Category = Category;
         }
+
         public Feed()
         {
 

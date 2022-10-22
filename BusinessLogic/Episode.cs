@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 
 namespace BusinessLogic
 {
-    public class Episode
+    public class Episode : Entity
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
         public string Description { get; set; }
 
+        public Episode(string description, string name): base(name)
+        {
+            Description = description;
+        }
     }
 }

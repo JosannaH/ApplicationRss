@@ -31,8 +31,6 @@
             this.lvFeeds = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.lvEpisodes = new System.Windows.Forms.ListView();
             this.lvCategories = new System.Windows.Forms.ListView();
             this.btnSaveFeed = new System.Windows.Forms.Button();
@@ -41,11 +39,9 @@
             this.btnDeleteCategory = new System.Windows.Forms.Button();
             this.lblCategories = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.lblUpdateInterval = new System.Windows.Forms.Label();
             this.lblCategory = new System.Windows.Forms.Label();
             this.tbUrl = new System.Windows.Forms.TextBox();
             this.tbNewCategoryName = new System.Windows.Forms.TextBox();
-            this.cbInterval = new System.Windows.Forms.ComboBox();
             this.cbCategory = new System.Windows.Forms.ComboBox();
             this.tbEpisodeSummary = new System.Windows.Forms.RichTextBox();
             this.lblEpisodes = new System.Windows.Forms.Label();
@@ -66,9 +62,8 @@
             // 
             this.lvFeeds.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1,
-            this.columnHeader2,
-            this.columnHeader3,
-            this.columnHeader4});
+            this.columnHeader2});
+            this.lvFeeds.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lvFeeds.HideSelection = false;
             this.lvFeeds.Location = new System.Drawing.Point(23, 56);
             this.lvFeeds.Name = "lvFeeds";
@@ -78,19 +73,11 @@
             // 
             // columnHeader1
             // 
-            this.columnHeader1.Text = "Avsnitt";
+            this.columnHeader1.Text = "Name";
             // 
             // columnHeader2
             // 
-            this.columnHeader2.Text = "Namn";
-            // 
-            // columnHeader3
-            // 
-            this.columnHeader3.Text = "Intervall";
-            // 
-            // columnHeader4
-            // 
-            this.columnHeader4.Text = "Kategori";
+            this.columnHeader2.Text = "Antal avsnitt";
             // 
             // lvEpisodes
             // 
@@ -169,15 +156,6 @@
             this.label2.TabIndex = 10;
             this.label2.Text = "URL:";
             // 
-            // lblUpdateInterval
-            // 
-            this.lblUpdateInterval.AutoSize = true;
-            this.lblUpdateInterval.Location = new System.Drawing.Point(224, 426);
-            this.lblUpdateInterval.Name = "lblUpdateInterval";
-            this.lblUpdateInterval.Size = new System.Drawing.Size(101, 16);
-            this.lblUpdateInterval.TabIndex = 11;
-            this.lblUpdateInterval.Text = "Update interval:";
-            // 
             // lblCategory
             // 
             this.lblCategory.AutoSize = true;
@@ -201,20 +179,12 @@
             this.tbNewCategoryName.Size = new System.Drawing.Size(185, 22);
             this.tbNewCategoryName.TabIndex = 14;
             // 
-            // cbInterval
-            // 
-            this.cbInterval.FormattingEnabled = true;
-            this.cbInterval.Location = new System.Drawing.Point(227, 445);
-            this.cbInterval.Name = "cbInterval";
-            this.cbInterval.Size = new System.Drawing.Size(98, 24);
-            this.cbInterval.TabIndex = 15;
-            // 
             // cbCategory
             // 
             this.cbCategory.FormattingEnabled = true;
-            this.cbCategory.Location = new System.Drawing.Point(333, 445);
+            this.cbCategory.Location = new System.Drawing.Point(269, 445);
             this.cbCategory.Name = "cbCategory";
-            this.cbCategory.Size = new System.Drawing.Size(121, 24);
+            this.cbCategory.Size = new System.Drawing.Size(185, 24);
             this.cbCategory.TabIndex = 16;
             // 
             // tbEpisodeSummary
@@ -307,7 +277,7 @@
             // 
             this.tbFeedName.Location = new System.Drawing.Point(23, 445);
             this.tbFeedName.Name = "tbFeedName";
-            this.tbFeedName.Size = new System.Drawing.Size(195, 22);
+            this.tbFeedName.Size = new System.Drawing.Size(237, 22);
             this.tbFeedName.TabIndex = 26;
             // 
             // lblSortByCategory
@@ -356,11 +326,9 @@
             this.Controls.Add(this.lblEpisodes);
             this.Controls.Add(this.tbEpisodeSummary);
             this.Controls.Add(this.cbCategory);
-            this.Controls.Add(this.cbInterval);
             this.Controls.Add(this.tbNewCategoryName);
             this.Controls.Add(this.tbUrl);
             this.Controls.Add(this.lblCategory);
-            this.Controls.Add(this.lblUpdateInterval);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.lblCategories);
             this.Controls.Add(this.btnDeleteCategory);
@@ -388,16 +356,12 @@
         private System.Windows.Forms.Button btnDeleteCategory;
         private System.Windows.Forms.Label lblCategories;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label lblUpdateInterval;
         private System.Windows.Forms.Label lblCategory;
         private System.Windows.Forms.TextBox tbUrl;
         private System.Windows.Forms.TextBox tbNewCategoryName;
-        private System.Windows.Forms.ComboBox cbInterval;
         private System.Windows.Forms.ComboBox cbCategory;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
-        private System.Windows.Forms.ColumnHeader columnHeader3;
-        private System.Windows.Forms.ColumnHeader columnHeader4;
         private System.Windows.Forms.RichTextBox tbEpisodeSummary;
         private System.Windows.Forms.Label lblEpisodes;
         private System.Windows.Forms.Label lblFeeds;

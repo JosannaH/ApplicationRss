@@ -11,23 +11,23 @@ using System.Xml.Serialization;
 using BusinessLogic;
 using System.IO;
 using System.Xml;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace ApplicationRss
 {
+    [Serializable]
+    [XmlInclude(typeof(Form1))]
     public partial class Form1 : Form
     {
-
+        List<Feed> listOfFeeds = new List<Feed>();
        
-        
         public Form1()
         {
-            
-
             InitializeComponent();
 
             // TODO: Deserialize
             cbCategory.Items.Add("Nyheter");
-            cbInterval.Items.Add(2);
+
             // TODO: populate feeds listview
             // TODO: populate category combobox
         }
@@ -38,23 +38,16 @@ namespace ApplicationRss
 
             string url = tbUrl.Text;
             string name = tbFeedName.Text;
-            int updateInterval = int.Parse(cbInterval.SelectedItem.ToString());
             string category =  cbCategory.SelectedItem.ToString();
-
-            //add feed to category
     
-            Feed feed = new Feed(name, url, updateInterval, category);
-
-            // TODO: get category objecy by categoryId, add feed to ListOfFeeds for that category
-            //category.ListOfFeeds.Add(feed);
+            Feed feed = new Feed(name, url,category);
+            listOfFeeds.Add(feed);
 
             SerializerForXml serializerForXml = new SerializerForXml();
-            serializerForXml.SerializeFeed(feed);
+            serializerForXml.SerializeFeed(listOfFeeds);
 
             tbUrl.Clear();
             tbFeedName.Clear();
-            
-
         }
 
         private void btnEditFeed_Click(object sender, EventArgs e)
@@ -65,12 +58,7 @@ namespace ApplicationRss
             // TODO: populate category combobox, start with current choise
             // TODO: Update listview
 
-            // TODO: add validation / exceptions on input
-
-            SerializerForXml serializerForXml = new SerializerForXml();
-            Feed feed = serializerForXml.DeserializeFeed();
-            tbUrl.Text = feed.Url;
-            tbFeedName.Text = feed.Name;
+            // TODO: add validation / exceptions on input  
         }
 
         private void btnDeleteFeed_Click(object sender, EventArgs e)
@@ -107,7 +95,22 @@ namespace ApplicationRss
             // TODO: Delete category and all feeds in that category
             // TODO: Warning to user
             // TODO: Update listview
+
+            SerializerForXml serializerForXml=new SerializerForXml();
+            List<Feed> testList = new List<Feed>();
+            Feed feed = new Feed();
+            testList = serializerForXml.DeserializeFeed();
+            ShowFeedsInListView(testList);
         }
 
+        private void ShowFeedsInListView(List<Feed> listOfFeeds)
+        {
+            foreach(Feed feed in listOfFeeds)
+            {
+                string[] row = { feed.Name, "0" };
+                var listViewItem = new ListViewItem(row);
+                lvFeeds.Items.Add(listViewItem);
+            }
+        }
     }
 }
