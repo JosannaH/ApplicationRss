@@ -52,6 +52,11 @@ namespace ApplicationRss
 
         private void btnEditFeed_Click(object sender, EventArgs e)
         {
+            SerializerForXml serializerForXml = new SerializerForXml();
+            listOfFeeds = serializerForXml.DeserializeFeed();
+            Console.WriteLine("Feeds i lista: " + listOfFeeds.Count);
+
+
             // TODO: Find object by id
             // TODO: populate URL and name
             // TODO: populate interval combobox, start with current choise
