@@ -24,11 +24,12 @@ namespace ApplicationRss
         public Form1()
         {
             InitializeComponent();
+            
+            // TODO: deserialize feeds file
+            // ShowFeedsInListView(listOfFeeds);
 
-            // TODO: Deserialize
             cbCategory.Items.Add("Nyheter");
-
-            // TODO: populate feeds listview
+            // TODO: deserialize category file
             // TODO: populate category combobox
         }
 
@@ -39,12 +40,16 @@ namespace ApplicationRss
             string url = tbUrl.Text;
             string name = tbFeedName.Text;
             string category =  cbCategory.SelectedItem.ToString();
+
+            // TODO: Get feed from URL, create episode objects, add them to list
     
-            Feed feed = new Feed(name, url,category);
+            Feed feed = new Feed(name, url,category); //add listodepisodes as argument
             listOfFeeds.Add(feed);
 
             SerializerForXml serializerForXml = new SerializerForXml();
             serializerForXml.SerializeFeed(listOfFeeds);
+
+            ShowFeedsInListView(listOfFeeds);
 
             tbUrl.Clear();
             tbFeedName.Clear();
@@ -55,6 +60,9 @@ namespace ApplicationRss
             SerializerForXml serializerForXml = new SerializerForXml();
             listOfFeeds = serializerForXml.DeserializeFeed();
             Console.WriteLine("Feeds i lista: " + listOfFeeds.Count);
+            Console.WriteLine("Feed 1 namn: " + listOfFeeds[0].Name + ", kategori " + listOfFeeds[0].Category);
+
+            ShowFeedsInListView(listOfFeeds);
 
 
             // TODO: Find object by id
@@ -82,6 +90,8 @@ namespace ApplicationRss
             //category.Id = method to generate Id
             category.ListOfCategories.Add(category);
 
+            
+
             // TODO: Update listview
             // TODO: add validation / exceptions on input
         }
@@ -101,20 +111,23 @@ namespace ApplicationRss
             // TODO: Warning to user
             // TODO: Update listview
 
-            SerializerForXml serializerForXml=new SerializerForXml();
-            List<Feed> testList = new List<Feed>();
-            Feed feed = new Feed();
-            testList = serializerForXml.DeserializeFeed();
-            ShowFeedsInListView(testList);
+            //SerializerForXml serializerForXml=new SerializerForXml();
+            //List<Feed> testList = new List<Feed>();
+            //Feed feed = new Feed();
+            //testList = serializerForXml.DeserializeFeed();
+            ////ShowFeedsInListView(testList);
         }
 
         private void ShowFeedsInListView(List<Feed> listOfFeeds)
         {
+            lvFeeds.Items.Clear();
             foreach(Feed feed in listOfFeeds)
             {
-                string[] row = { feed.Name, "0" };
-                var listViewItem = new ListViewItem(row);
-                lvFeeds.Items.Add(listViewItem);
+                ListViewItem row = new ListViewItem(feed.Name);
+                row.SubItems.Add("avsnitt");
+                row.SubItems.Add(feed.Category);
+  
+                lvFeeds.Items.Add(row);
             }
         }
     }

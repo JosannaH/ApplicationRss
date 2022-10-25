@@ -21,19 +21,12 @@ namespace BusinessLogic
         public Feed(string name, string url, string category) : base(name)
         {
             Url = url;
-            Category = Category;
+            Category = category;
         }
 
         public Feed()
         {
 
-        }
-
-      
-
-        public List<Episode> GetListOfEpisodesFromXml()
-        {
-            return ListOfEpisodes;
         }
 
         public void SetListOfEpisodesToListView()
