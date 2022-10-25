@@ -124,7 +124,7 @@ namespace ApplicationRss
             foreach(Feed feed in listOfFeeds)
             {
                 ListViewItem row = new ListViewItem(feed.Name);
-                row.SubItems.Add("avsnitt");
+                row.SubItems.Add("avsnitt"); // TODO: change to feed.NumberOfEpisodes
                 row.SubItems.Add(feed.Category);
   
                 lvFeeds.Items.Add(row);
