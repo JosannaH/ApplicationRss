@@ -15,7 +15,7 @@ namespace BusinessLogic
 
         public string Category { get; set; }
 
-        private List<Episode> ListOfEpisodes;
+        public List<Episode> ListOfEpisodes { get; set; }
         public int NumberOfEpisodes => ListOfEpisodes.Count();
 
         public Feed(string name, string url, string category) : base(name)

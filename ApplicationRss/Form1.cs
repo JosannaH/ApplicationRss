@@ -12,6 +12,9 @@ using BusinessLogic;
 using System.IO;
 using System.Xml;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Security.Cryptography;
+using System.ServiceModel.Syndication;
+using System.Runtime.Remoting.Messaging;
 
 namespace ApplicationRss
 {
@@ -24,11 +27,18 @@ namespace ApplicationRss
         public Form1()
         {
             InitializeComponent();
-            
-            // TODO: deserialize feeds file
-            // ShowFeedsInListView(listOfFeeds);
+
+            // TODO: Refactor to method
+            SerializerForXml serializerForXml = new SerializerForXml();
+            listOfFeeds = serializerForXml.DeserializeFeed();
+
+            listOfFeeds = addNewEpisodesToListOfFeeds(listOfFeeds);
+            ShowFeedsInListView(listOfFeeds);
 
             cbCategory.Items.Add("Nyheter");
+            //Episode testEpisode = new Episode();
+            //testEpisode.Name = "testEpisodeName";
+            //testEpisode.Description = "testEpisodeDescription";
             // TODO: deserialize category file
             // TODO: populate category combobox
         }
@@ -49,6 +59,8 @@ namespace ApplicationRss
             SerializerForXml serializerForXml = new SerializerForXml();
             serializerForXml.SerializeFeed(listOfFeeds);
 
+
+
             ShowFeedsInListView(listOfFeeds);
 
             tbUrl.Clear();
@@ -57,15 +69,14 @@ namespace ApplicationRss
 
         private void btnEditFeed_Click(object sender, EventArgs e)
         {
+            // Temporarily used as test button
             SerializerForXml serializerForXml = new SerializerForXml();
             listOfFeeds = serializerForXml.DeserializeFeed();
-            Console.WriteLine("Feeds i lista: " + listOfFeeds.Count);
-            Console.WriteLine("Feed 1 namn: " + listOfFeeds[0].Name + ", kategori " + listOfFeeds[0].Category);
+
 
             ShowFeedsInListView(listOfFeeds);
 
 
-            // TODO: Find object by id
             // TODO: populate URL and name
             // TODO: populate interval combobox, start with current choise
             // TODO: populate category combobox, start with current choise
@@ -130,5 +141,86 @@ namespace ApplicationRss
                 lvFeeds.Items.Add(row);
             }
         }
+
+
+        private List<Episode> GetEpisodesFromUrl(String url, Feed feed)
+        {
+            List<Episode> listOfRetrievedEpisodes = new List<Episode>();
+            // TODO: XmlException 
+            XmlReader xmlReader = XmlReader.Create(url);
+            SyndicationFeed syndicationFeed = SyndicationFeed.Load(xmlReader);
+
+
+            foreach (var item in syndicationFeed.Items)
+            {
+                Episode episode = new Episode();
+                episode.Name = item.Title.Text;
+                Console.WriteLine(episode.Name);
+                episode.Description = item.Summary.Text;
+                listOfRetrievedEpisodes.Add(episode);  
+            }
+
+            // List<Episode> listOfNewEpisodes = GetOnlyNewEpisodes(listOfRetrievedEpisodes, feed.ListOfEpisodes);
+
+            //return listOfNewEpisodes;
+
+            return listOfRetrievedEpisodes;
+        }
+
+        private List<Episode> GetOnlyNewEpisodes(List<Episode> listOfRetrievedEpisodes, List<Episode> listOfOldEpisodes)
+        {
+            List<Episode> listOfNewEpisodes = new List<Episode>();
+            Boolean isNew = false;
+
+            foreach (Episode retrievedEpisode in listOfRetrievedEpisodes)
+            {
+
+                foreach (Episode oldEpisode in listOfOldEpisodes)
+                {
+                    if(oldEpisode.Name == retrievedEpisode.Name)
+                    {
+                        isNew = false;
+                    }
+                    else if(oldEpisode.Name != retrievedEpisode.Name)
+                    {
+                        isNew = true;
+                    }
+
+                    if (isNew)
+                    {
+                        listOfNewEpisodes.Add(retrievedEpisode);
+                    }
+                }
+            }
+            return listOfNewEpisodes;
+        }
+
+        private List<Feed> addNewEpisodesToListOfFeeds(List<Feed> listOfFeeds)
+        {
+            foreach (Feed feed in listOfFeeds)
+            {
+                feed.ListOfEpisodes.AddRange(GetEpisodesFromUrl(feed.Url, feed));
+            }
+
+            return listOfFeeds;
+        }
+
+        //private Boolean HasNewEpisodes(String url, DateTime lastRetrievedUpdate)
+        //{
+        //    XmlReader xmlReader = XmlReader.Create(url);
+        //    SyndicationFeed syndicationFeed = SyndicationFeed.Load(xmlReader);
+
+        //    DateTime lastFeedUpdate = new DateTime();
+        //    syndicationFeed.LastUpdatedTime = lastFeedUpdate;
+
+        //    if (lastRetrievedUpdate.Equals(lastFeedUpdate))
+        //    {
+        //        return false;
+        //    }
+        //    else
+        //    {
+        //        return true;
+        //    }
+        //}
     }
 }
