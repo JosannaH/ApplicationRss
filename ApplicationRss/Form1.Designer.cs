@@ -35,6 +35,7 @@ namespace ApplicationRss
             this.columnNoOfEpisodes = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnFeedCategory = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.lvEpisodes = new System.Windows.Forms.ListView();
+            this.columnEpisodeName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.lvCategories = new System.Windows.Forms.ListView();
             this.btnSaveFeed = new System.Windows.Forms.Button();
             this.btnDeleteFeed = new System.Windows.Forms.Button();
@@ -59,7 +60,7 @@ namespace ApplicationRss
             this.lblSortByCategory = new System.Windows.Forms.Label();
             this.cbSortByCategory = new System.Windows.Forms.ComboBox();
             this.btnEditCategory = new System.Windows.Forms.Button();
-            this.columnEpisodeName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnCategoryName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
             // lvFeeds
@@ -85,19 +86,16 @@ namespace ApplicationRss
             // 
             this.columnFeedName.Text = "Name";
             this.columnFeedName.Width = 230;
-            this.columnFeedName.ListView.Font = new Font(this.columnFeedName.ListView.Font, FontStyle.Bold);
             // 
             // columnNoOfEpisodes
             // 
             this.columnNoOfEpisodes.Text = "Episodes";
             this.columnNoOfEpisodes.Width = 80;
-            this.columnNoOfEpisodes.ListView.Font = new Font(this.columnNoOfEpisodes.ListView.Font, FontStyle.Bold);
             // 
             // columnFeedCategory
             // 
             this.columnFeedCategory.Text = "Category";
             this.columnFeedCategory.Width = 121;
-            this.columnFeedCategory.ListView.Font = new Font(this.columnFeedCategory.ListView.Font, FontStyle.Bold);
             // 
             // lvEpisodes
             // 
@@ -115,8 +113,15 @@ namespace ApplicationRss
             this.lvEpisodes.UseCompatibleStateImageBehavior = false;
             this.lvEpisodes.View = System.Windows.Forms.View.Details;
             // 
+            // columnEpisodeName
+            // 
+            this.columnEpisodeName.Text = "Episode";
+            this.columnEpisodeName.Width = 442;
+            // 
             // lvCategories
             // 
+            this.lvCategories.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnCategoryName});
             this.lvCategories.FullRowSelect = true;
             this.lvCategories.GridLines = true;
             this.lvCategories.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
@@ -339,11 +344,10 @@ namespace ApplicationRss
             this.btnEditCategory.UseVisualStyleBackColor = true;
             this.btnEditCategory.Click += new System.EventHandler(this.btnEditCategory_Click);
             // 
-            // columnEpisodeName
+            // columnCategoryName
             // 
-            this.columnEpisodeName.Text = "Episode";
-            this.columnEpisodeName.Width = 442;
-            this.columnEpisodeName.ListView.Font = new Font(this.columnEpisodeName.ListView.Font, FontStyle.Bold);
+            this.columnCategoryName.Text = "";
+            this.columnCategoryName.Width = 237;
             // 
             // Form1
             // 
@@ -415,6 +419,7 @@ namespace ApplicationRss
         private System.Windows.Forms.Button btnEditCategory;
         private System.Windows.Forms.ColumnHeader columnFeedCategory;
         private System.Windows.Forms.ColumnHeader columnEpisodeName;
+        private System.Windows.Forms.ColumnHeader columnCategoryName;
     }
 }
 

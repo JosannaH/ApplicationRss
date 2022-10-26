@@ -23,19 +23,22 @@ namespace ApplicationRss
     [XmlInclude(typeof(Form1))]
     public partial class Form1 : Form
     {
-        List<Feed> listOfFeeds = new List<Feed>();
+        List<Feed> ListOfFeeds = new List<Feed>();
+        List<Category> ListOfCategories = new List<Category> { new Category("News"), new Category("Fashion") };
 
         public Form1()
         {
             InitializeComponent();
 
             SerializerForXml serializerForXml = new SerializerForXml();
-            listOfFeeds = serializerForXml.DeserializeFeed();
+            ListOfFeeds = serializerForXml.DeserializeFeed();
+            ListOfCategories = serializerForXml.DeserializeCategory();
 
-            UpdateEpisodesForAllFeeds(listOfFeeds);
-            ShowFeedsInListView(listOfFeeds);
+            UpdateEpisodesForAllFeeds(ListOfFeeds);
+            ShowFeedsInListView(ListOfFeeds);
+            ShowCategoriesInListView(ListOfCategories);
+            ShowCategoriesInComboboxes(ListOfCategories, cbCategory, cbSortByCategory);
 
-            cbCategory.Items.Add("Nyheter");
 
             // TODO: deserialize category file
             // TODO: populate category combobox
@@ -51,12 +54,12 @@ namespace ApplicationRss
     
             Feed feed = new Feed(name, url,category);
             feed.ListOfEpisodes = CreateListOfEpisodes(url, feed);
-            listOfFeeds.Add(feed);
+            ListOfFeeds.Add(feed);
 
             SerializerForXml serializerForXml = new SerializerForXml();
-            serializerForXml.SerializeFeed(listOfFeeds);
+            serializerForXml.SerializeFeed(ListOfFeeds);
 
-            ShowFeedsInListView(listOfFeeds);
+            ShowFeedsInListView(ListOfFeeds);
             ShowEpisodesInListView(feed.ListOfEpisodes);
             lvEpisodes.Columns[0].Text = feed.Name;
 
@@ -68,10 +71,10 @@ namespace ApplicationRss
         {
             // Temporarily used as test button
             SerializerForXml serializerForXml = new SerializerForXml();
-            listOfFeeds = serializerForXml.DeserializeFeed();
+            ListOfFeeds = serializerForXml.DeserializeFeed();
 
 
-            ShowFeedsInListView(listOfFeeds);
+            ShowFeedsInListView(ListOfFeeds);
 
 
             // TODO: populate URL and name
@@ -91,14 +94,16 @@ namespace ApplicationRss
 
         private void btnSaveCategory_Click(object sender, EventArgs e)
         {
-            // TODO: Save in ListOfCategories
             string categoryName = tbNewCategoryName.Text;
             Category category = new Category(categoryName);
 
-            //category.Id = method to generate Id
-            category.ListOfCategories.Add(category);
+            ListOfCategories.Add(category);
+            SerializerForXml serializerForXml = new SerializerForXml();
+            serializerForXml.SerializeCategory(ListOfCategories);
 
-            
+            ShowCategoriesInListView(ListOfCategories);
+            tbNewCategoryName.Clear();
+            ShowCategoriesInComboboxes(ListOfCategories, cbCategory, cbSortByCategory);
 
             // TODO: Update listview
             // TODO: add validation / exceptions on input
@@ -150,6 +155,31 @@ namespace ApplicationRss
 
                 lvEpisodes.Items.Add(row);
             }
+        }
+
+        private void ShowCategoriesInListView(List<Category> listOfCategories)
+        {
+            lvCategories.Items.Clear();
+            foreach(Category category in listOfCategories)
+            {
+                ListViewItem row = new ListViewItem(category.Name);
+                row.Font = new Font(row.Font, FontStyle.Regular);
+
+                lvCategories.Items.Add(row);
+            }
+        }
+
+        private void ShowCategoriesInComboboxes(List<Category> listOfCategories, System.Windows.Forms.ComboBox comboBox1, System.Windows.Forms.ComboBox comboBox2)
+        {
+            comboBox1.Items.Clear();
+            comboBox2.Items.Clear();
+
+            foreach(Category category in listOfCategories)
+            {
+                comboBox1.Items.Add(category.Name);
+                comboBox2.Items.Add(category.Name);
+            }
+            
         }
 
         // Get all episodes for one Feed
@@ -230,7 +260,7 @@ namespace ApplicationRss
 
             if (feedName != null)
             {
-                foreach (Feed feed in listOfFeeds)
+                foreach (Feed feed in ListOfFeeds)
                 {
                     if (feed.Name.Equals(feedName))
                     {

@@ -22,11 +22,5 @@ namespace BusinessLogic
         {
 
         }
-
-
-        // list objects in combobox
-
-        // list objects in listview
-
     }
 }

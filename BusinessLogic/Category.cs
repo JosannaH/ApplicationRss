@@ -12,9 +12,14 @@ namespace BusinessLogic
     [XmlInclude(typeof(Category))]
     public class Category : Entity
     {
-        public List<Entity> ListOfCategories { get; set; }
+        //public List<Category> ListOfCategories { get; set; }
 
         public Category(string name) : base(name)
+        {
+
+        }
+
+        public Category()
         {
 
         }
