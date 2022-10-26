@@ -82,8 +82,21 @@ namespace ApplicationRss
 
         private void btnDeleteFeed_Click(object sender, EventArgs e)
         {
-            // TODO: Find objecy by id, delete all data
-            // TODO: Update listview
+            String feedName = ListViewHelper.GetSelectedItem(lvFeeds);
+
+            for (int i = 0; i < ListOfFeeds.Count; i++)
+            {
+                if(ListOfFeeds[i].Name.Equals(feedName))
+                {
+                    ListOfFeeds.RemoveAt(i);
+                }
+            }
+            serializerForXml.SerializeFeed(ListOfFeeds);
+            ShowFeedsInListView(ListOfFeeds);
+            lvEpisodes.Items.Clear();
+            lvEpisodes.Columns[0].Text = "";
+
+
         }
 
         private void btnSaveCategory_Click(object sender, EventArgs e)
@@ -117,8 +130,6 @@ namespace ApplicationRss
 
             ShowCategoriesInComboboxes(ListOfCategories, cbCategory, cbSortByCategory);
             tbNewCategoryName.Clear();
-            // TODO: Update listview
-            // TODO: add validation / exceptions on input
         }
 
         private void btnEditCategory_Click(object sender, EventArgs e)
@@ -147,18 +158,14 @@ namespace ApplicationRss
                 }
             }
 
+             
             serializerForXml.SerializeFeed(ListOfFeeds);
             serializerForXml.SerializeCategory(ListOfCategories);
             ShowCategoriesInComboboxes(ListOfCategories, cbCategory, cbSortByCategory);
             ShowCategoriesInListView(ListOfCategories);
             ShowFeedsInListView(ListOfFeeds);
           
-
-            // TODO: Delete category and all feeds in that category
             // TODO: Warning to user
-            // TODO: Update listview
-
-
         }
 
         private void ShowFeedsInListView(List<Feed> listOfFeeds)
