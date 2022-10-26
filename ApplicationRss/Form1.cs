@@ -69,12 +69,7 @@ namespace ApplicationRss
 
         private void btnEditFeed_Click(object sender, EventArgs e)
         {
-            // Temporarily used as test button
-            SerializerForXml serializerForXml = new SerializerForXml();
-            ListOfFeeds = serializerForXml.DeserializeFeed();
-
-
-            ShowFeedsInListView(ListOfFeeds);
+   
 
 
             // TODO: populate URL and name
@@ -91,31 +86,45 @@ namespace ApplicationRss
             // TODO: Update listview
         }
 
-
         private void btnSaveCategory_Click(object sender, EventArgs e)
         {
-            string categoryName = tbNewCategoryName.Text;
-            Category category = new Category(categoryName);
+            if(btnSaveCategory.Text.Equals("Save category"))
+            {
+                string categoryName = tbNewCategoryName.Text;
+                Category category = new Category(categoryName);
+                ListOfCategories.Add(category);
+          
+            }
+            else
+            {
+                string newCategoryName = tbNewCategoryName.Text;
+                string oldCategoryName = lvCategories.SelectedItems[0].Text;
 
-            ListOfCategories.Add(category);
+                foreach (Category category in ListOfCategories)
+                {
+                    if (category.Name.Equals(oldCategoryName))
+                    {
+                        category.Name = newCategoryName;
+                    }
+                }
+                btnSaveCategory.Text = "Save category";
+            }
             SerializerForXml serializerForXml = new SerializerForXml();
             serializerForXml.SerializeCategory(ListOfCategories);
 
             ShowCategoriesInListView(ListOfCategories);
-            tbNewCategoryName.Clear();
-            ShowCategoriesInComboboxes(ListOfCategories, cbCategory, cbSortByCategory);
 
+            ShowCategoriesInComboboxes(ListOfCategories, cbCategory, cbSortByCategory);
+            tbNewCategoryName.Clear();
             // TODO: Update listview
             // TODO: add validation / exceptions on input
         }
 
         private void btnEditCategory_Click(object sender, EventArgs e)
         {
-            // TODO: Find object by id in ListOfCategories, update name
-            // TODO: Update listview
-            // TODO: Update cbSortByCategory
-
-            // TODO: add validation / exceptions on input
+            string categoryName = lvCategories.SelectedItems[0].Text;
+            tbNewCategoryName.Text = categoryName;
+            btnSaveCategory.Text = "Save changes";
         }
 
         private void btnDeleteCategory_Click(object sender, EventArgs e)
@@ -182,7 +191,6 @@ namespace ApplicationRss
             
         }
 
-        // Get all episodes for one Feed
         private List<Episode> CreateListOfEpisodes(string url, Feed feed)
         {
             List<Episode> listOfEpisodes = new List<Episode>();
@@ -199,17 +207,15 @@ namespace ApplicationRss
             return listOfEpisodes;
         }
 
-        // Get new episodes for all feeds
         private void UpdateEpisodesForAllFeeds(List<Feed> listOfFeeds)
         {
             foreach(Feed feed in listOfFeeds)
             {
-                UpdateListOfEpisodes(feed.Url, feed);
+                UpdateEpisodesForOneFeed(feed.Url, feed);
             }
         }
 
-        // Get new episodes for one Feed
-        private void UpdateListOfEpisodes(String url, Feed feed)
+        private void UpdateEpisodesForOneFeed(String url, Feed feed)
         { 
             // TODO: XmlException 
             XmlReader xmlReader = XmlReader.Create(url);
@@ -253,7 +259,6 @@ namespace ApplicationRss
 
         }
 
-        //
         private List<Episode> GetListOfEpisodesForChosenFeed(String feedName)
         {
             List<Episode> listOfEpisodes = new List<Episode>();
