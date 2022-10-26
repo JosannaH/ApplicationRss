@@ -122,8 +122,6 @@ namespace ApplicationRss
             // TODO: add validation / exceptions on input
         }
 
-
-
         private void btnEditCategory_Click(object sender, EventArgs e)
         {
             string categoryName = lvCategories.SelectedItems[0].Text;
@@ -290,6 +288,22 @@ namespace ApplicationRss
             }
 
             return listOfEpisodes;
+        }
+
+
+
+        private void cbSortByCategory_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string category = cbSortByCategory.SelectedItem.ToString();
+            List<Feed> listOfFeedsByCategory = new List<Feed>();
+            foreach (Feed feed in ListOfFeeds)
+            {
+                if (feed.Category.Equals(category))
+                {
+                    listOfFeedsByCategory.Add(feed);
+                }
+            }
+            ShowFeedsInListView(listOfFeedsByCategory);
         }
     }
 }

@@ -37,6 +37,7 @@ namespace ApplicationRss
             this.lvEpisodes = new System.Windows.Forms.ListView();
             this.columnEpisodeName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.lvCategories = new System.Windows.Forms.ListView();
+            this.columnCategoryName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.btnSaveFeed = new System.Windows.Forms.Button();
             this.btnDeleteFeed = new System.Windows.Forms.Button();
             this.btnSaveCategory = new System.Windows.Forms.Button();
@@ -60,7 +61,6 @@ namespace ApplicationRss
             this.lblSortByCategory = new System.Windows.Forms.Label();
             this.cbSortByCategory = new System.Windows.Forms.ComboBox();
             this.btnEditCategory = new System.Windows.Forms.Button();
-            this.columnCategoryName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
             // lvFeeds
@@ -133,6 +133,11 @@ namespace ApplicationRss
             this.lvCategories.TabIndex = 2;
             this.lvCategories.UseCompatibleStateImageBehavior = false;
             this.lvCategories.View = System.Windows.Forms.View.Details;
+            // 
+            // columnCategoryName
+            // 
+            this.columnCategoryName.Text = "";
+            this.columnCategoryName.Width = 237;
             // 
             // btnSaveFeed
             // 
@@ -333,6 +338,7 @@ namespace ApplicationRss
             this.cbSortByCategory.Name = "cbSortByCategory";
             this.cbSortByCategory.Size = new System.Drawing.Size(137, 24);
             this.cbSortByCategory.TabIndex = 28;
+            this.cbSortByCategory.SelectedIndexChanged += new System.EventHandler(this.cbSortByCategory_SelectedIndexChanged);
             // 
             // btnEditCategory
             // 
@@ -343,11 +349,6 @@ namespace ApplicationRss
             this.btnEditCategory.Text = "Edit category";
             this.btnEditCategory.UseVisualStyleBackColor = true;
             this.btnEditCategory.Click += new System.EventHandler(this.btnEditCategory_Click);
-            // 
-            // columnCategoryName
-            // 
-            this.columnCategoryName.Text = "";
-            this.columnCategoryName.Width = 237;
             // 
             // Form1
             // 
