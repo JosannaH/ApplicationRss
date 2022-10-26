@@ -15,6 +15,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Security.Cryptography;
 using System.ServiceModel.Syndication;
 using System.Runtime.Remoting.Messaging;
+using System.Collections;
 
 namespace ApplicationRss
 {
@@ -28,20 +29,14 @@ namespace ApplicationRss
         {
             InitializeComponent();
 
-            // TODO: Refactor to method
             SerializerForXml serializerForXml = new SerializerForXml();
             listOfFeeds = serializerForXml.DeserializeFeed();
 
-            listOfFeeds = addNewEpisodesToListOfFeeds(listOfFeeds);
+            UpdateEpisodesForAllFeeds(listOfFeeds);
             ShowFeedsInListView(listOfFeeds);
-            Console.WriteLine("Finns det nåt avsnitt i listan:  " + listOfFeeds[0].ListOfEpisodes[0].Name);
-
-         
 
             cbCategory.Items.Add("Nyheter");
-            //Episode testEpisode = new Episode();
-            //testEpisode.Name = "testEpisodeName";
-            //testEpisode.Description = "testEpisodeDescription";
+
             // TODO: deserialize category file
             // TODO: populate category combobox
         }
@@ -55,9 +50,8 @@ namespace ApplicationRss
             string category =  cbCategory.SelectedItem.ToString();
     
             Feed feed = new Feed(name, url,category);
-            feed.ListOfEpisodes = GetEpisodesFromUrl(url, feed);
+            feed.ListOfEpisodes = CreateListOfEpisodes(url, feed);
             listOfFeeds.Add(feed);
-            listOfFeeds = addNewEpisodesToListOfFeeds(listOfFeeds);
 
             SerializerForXml serializerForXml = new SerializerForXml();
             serializerForXml.SerializeFeed(listOfFeeds);
@@ -158,75 +152,85 @@ namespace ApplicationRss
             }
         }
 
-
-        private List<Episode> GetEpisodesFromUrl(String url, Feed feed)
+        // Get all episodes for one Feed
+        private List<Episode> CreateListOfEpisodes(string url, Feed feed)
         {
-            List<Episode> listOfRetrievedEpisodes = new List<Episode>();
+            List<Episode> listOfEpisodes = new List<Episode>();
             // TODO: XmlException 
             XmlReader xmlReader = XmlReader.Create(url);
             SyndicationFeed syndicationFeed = SyndicationFeed.Load(xmlReader);
-
-
             foreach (var item in syndicationFeed.Items)
             {
                 Episode episode = new Episode();
                 episode.Name = item.Title.Text;
                 episode.Description = item.Summary.Text;
-                listOfRetrievedEpisodes.Add(episode);  
+                listOfEpisodes.Add(episode);
             }
-
-            // List<Episode> listOfNewEpisodes = GetOnlyNewEpisodes(listOfRetrievedEpisodes, feed.ListOfEpisodes);
-
-            //return listOfNewEpisodes;
-
-            return listOfRetrievedEpisodes;
+            return listOfEpisodes;
         }
 
-        private List<Episode> GetOnlyNewEpisodes(List<Episode> listOfRetrievedEpisodes, List<Episode> listOfOldEpisodes)
+        // Get new episodes for all feeds
+        private void UpdateEpisodesForAllFeeds(List<Feed> listOfFeeds)
         {
-            List<Episode> listOfNewEpisodes = new List<Episode>();
+            foreach(Feed feed in listOfFeeds)
+            {
+                UpdateListOfEpisodes(feed.Url, feed);
+            }
+        }
+
+        // Get new episodes for one Feed
+        private void UpdateListOfEpisodes(String url, Feed feed)
+        { 
+            // TODO: XmlException 
+            XmlReader xmlReader = XmlReader.Create(url);
+            SyndicationFeed syndicationFeed = SyndicationFeed.Load(xmlReader);
             Boolean isNew = true;
 
-            foreach (Episode retrievedEpisode in listOfRetrievedEpisodes)
+            foreach (var item in syndicationFeed.Items)
             {
+                String newEpisode = item.Title.Text;
 
-                foreach (Episode oldEpisode in listOfOldEpisodes)
-                {
-                    if(oldEpisode.Name.Equals(retrievedEpisode.Name))
+                    foreach (var episodeItem in feed.ListOfEpisodes)
                     {
+                        String oldEpisode = episodeItem.Name;
+
+                        if (newEpisode.Equals(oldEpisode))
+                        {
                         isNew = false;
+                        }
                     }
 
-                    if (isNew)
-                    {
-                        listOfNewEpisodes.Add(retrievedEpisode);
-                    }
+                if (isNew) {
+                    Episode episode = new Episode();
+                    episode.Name = item.Title.Text;
+                    episode.Description = item.Summary.Text;
+                    // TODO: Fix so that new episodes show on top of listview!
+                    feed.ListOfEpisodes.Add(episode);
                 }
             }
-            return listOfNewEpisodes;
         }
-
-        private List<Feed> addNewEpisodesToListOfFeeds(List<Feed> listOfFeeds)
-        {
-            foreach (Feed feed in listOfFeeds)
-            {
-                feed.ListOfEpisodes.AddRange(GetEpisodesFromUrl(feed.Url, feed));
-            }
-
-            return listOfFeeds;
-        }
-
-
 
         private void lvFeeds_OnItemClick(object sender, EventArgs e)
         {
             
             String feedName = ListViewHelper.GetSelectedItem(lvFeeds);
+
+            // Change text on Episode listview header, to the name if chosen feed
             lvEpisodes.Columns[0].Text = feedName;
+           
+          
+            ShowEpisodesInListView(GetListOfEpisodesForChosenFeed(feedName)); 
+
+        }
+
+        //
+        private List<Episode> GetListOfEpisodesForChosenFeed(String feedName)
+        {
             List<Episode> listOfEpisodes = new List<Episode>();
+
             if (feedName != null)
             {
-                foreach(Feed feed in listOfFeeds)
+                foreach (Feed feed in listOfFeeds)
                 {
                     if (feed.Name.Equals(feedName))
                     {
@@ -234,26 +238,8 @@ namespace ApplicationRss
                     }
                 }
             }
-            ShowEpisodesInListView(listOfEpisodes); 
 
+            return listOfEpisodes;
         }
-
-        //private Boolean HasNewEpisodes(String url, DateTime lastRetrievedUpdate)
-        //{
-        //    XmlReader xmlReader = XmlReader.Create(url);
-        //    SyndicationFeed syndicationFeed = SyndicationFeed.Load(xmlReader);
-
-        //    DateTime lastFeedUpdate = new DateTime();
-        //    syndicationFeed.LastUpdatedTime = lastFeedUpdate;
-
-        //    if (lastRetrievedUpdate.Equals(lastFeedUpdate))
-        //    {
-        //        return false;
-        //    }
-        //    else
-        //    {
-        //        return true;
-        //    }
-        //}
     }
 }
