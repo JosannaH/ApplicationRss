@@ -23,7 +23,7 @@ namespace ApplicationRss
     public partial class Form1 : Form
     {
         List<Feed> listOfFeeds = new List<Feed>();
-       
+
         public Form1()
         {
             InitializeComponent();
@@ -34,6 +34,14 @@ namespace ApplicationRss
 
             listOfFeeds = addNewEpisodesToListOfFeeds(listOfFeeds);
             ShowFeedsInListView(listOfFeeds);
+            Console.WriteLine("Finns det nåt avsnitt i listan:  " + listOfFeeds[0].ListOfEpisodes[0].Name);
+
+            foreach (Episode episode in listOfFeeds[0].ListOfEpisodes)
+            {
+                ListViewItem row = new ListViewItem(episode.Name);
+
+                lvEpisodes.Items.Add(row);
+            }
 
             cbCategory.Items.Add("Nyheter");
             //Episode testEpisode = new Episode();
@@ -50,16 +58,12 @@ namespace ApplicationRss
             string url = tbUrl.Text;
             string name = tbFeedName.Text;
             string category =  cbCategory.SelectedItem.ToString();
-
-            // TODO: Get feed from URL, create episode objects, add them to list
     
             Feed feed = new Feed(name, url,category); //add listodepisodes as argument
             listOfFeeds.Add(feed);
 
             SerializerForXml serializerForXml = new SerializerForXml();
             serializerForXml.SerializeFeed(listOfFeeds);
-
-
 
             ShowFeedsInListView(listOfFeeds);
 
@@ -142,6 +146,17 @@ namespace ApplicationRss
             }
         }
 
+        private void ShowEpisodesInListView(List<Episode> listOfEpisodes)
+        {
+            lvEpisodes.Items.Clear();
+            foreach (Episode episode in listOfEpisodes)
+            {
+                ListViewItem row = new ListViewItem(episode.Name);
+
+                lvEpisodes.Items.Add(row);
+            }
+        }
+
 
         private List<Episode> GetEpisodesFromUrl(String url, Feed feed)
         {
@@ -157,6 +172,7 @@ namespace ApplicationRss
                 episode.Name = item.Title.Text;
                 Console.WriteLine(episode.Name);
                 episode.Description = item.Summary.Text;
+                Console.WriteLine(episode.Description);
                 listOfRetrievedEpisodes.Add(episode);  
             }
 
@@ -170,20 +186,16 @@ namespace ApplicationRss
         private List<Episode> GetOnlyNewEpisodes(List<Episode> listOfRetrievedEpisodes, List<Episode> listOfOldEpisodes)
         {
             List<Episode> listOfNewEpisodes = new List<Episode>();
-            Boolean isNew = false;
+            Boolean isNew = true;
 
             foreach (Episode retrievedEpisode in listOfRetrievedEpisodes)
             {
 
                 foreach (Episode oldEpisode in listOfOldEpisodes)
                 {
-                    if(oldEpisode.Name == retrievedEpisode.Name)
+                    if(oldEpisode.Name.Equals(retrievedEpisode.Name))
                     {
                         isNew = false;
-                    }
-                    else if(oldEpisode.Name != retrievedEpisode.Name)
-                    {
-                        isNew = true;
                     }
 
                     if (isNew)
@@ -203,6 +215,26 @@ namespace ApplicationRss
             }
 
             return listOfFeeds;
+        }
+
+
+
+        private void lvFeeds_OnItemClick(object sender, EventArgs e)
+        {
+            String feedName = ListViewHelper.GetSelectedItem(lvFeeds);
+            List<Episode> listOfEpisodes = new List<Episode>();
+            if (feedName != null)
+            {
+                foreach(Feed feed in listOfFeeds)
+                {
+                    if (feed.Name.Equals(feedName))
+                    {
+                        listOfEpisodes = feed.ListOfEpisodes;
+                    }
+                }
+            }
+            ShowEpisodesInListView(listOfEpisodes); 
+
         }
 
         //private Boolean HasNewEpisodes(String url, DateTime lastRetrievedUpdate)

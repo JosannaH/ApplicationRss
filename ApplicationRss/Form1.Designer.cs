@@ -31,6 +31,7 @@
             this.lvFeeds = new System.Windows.Forms.ListView();
             this.columnFeedName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnNoOfEpisodes = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnFeedCategory = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.lvEpisodes = new System.Windows.Forms.ListView();
             this.lvCategories = new System.Windows.Forms.ListView();
             this.btnSaveFeed = new System.Windows.Forms.Button();
@@ -56,7 +57,7 @@
             this.lblSortByCategory = new System.Windows.Forms.Label();
             this.cbSortByCategory = new System.Windows.Forms.ComboBox();
             this.btnEditCategory = new System.Windows.Forms.Button();
-            this.columnFeedCategory = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnEpisodeName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
             // lvFeeds
@@ -76,6 +77,7 @@
             this.lvFeeds.TabIndex = 0;
             this.lvFeeds.UseCompatibleStateImageBehavior = false;
             this.lvFeeds.View = System.Windows.Forms.View.Details;
+            this.lvFeeds.Click += new System.EventHandler(this.lvFeeds_OnItemClick);
             // 
             // columnFeedName
             // 
@@ -87,8 +89,15 @@
             this.columnNoOfEpisodes.Text = "Episodes";
             this.columnNoOfEpisodes.Width = 80;
             // 
+            // columnFeedCategory
+            // 
+            this.columnFeedCategory.Text = "Category";
+            this.columnFeedCategory.Width = 121;
+            // 
             // lvEpisodes
             // 
+            this.lvEpisodes.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnEpisodeName});
             this.lvEpisodes.FullRowSelect = true;
             this.lvEpisodes.GridLines = true;
             this.lvEpisodes.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
@@ -325,10 +334,10 @@
             this.btnEditCategory.UseVisualStyleBackColor = true;
             this.btnEditCategory.Click += new System.EventHandler(this.btnEditCategory_Click);
             // 
-            // columnFeedCategory
+            // columnEpisodeName
             // 
-            this.columnFeedCategory.Text = "Category";
-            this.columnFeedCategory.Width = 121;
+            this.columnEpisodeName.Text = "Episode";
+            this.columnEpisodeName.Width = 442;
             // 
             // Form1
             // 
@@ -399,6 +408,7 @@
         private System.Windows.Forms.ComboBox cbSortByCategory;
         private System.Windows.Forms.Button btnEditCategory;
         private System.Windows.Forms.ColumnHeader columnFeedCategory;
+        private System.Windows.Forms.ColumnHeader columnEpisodeName;
     }
 }
 

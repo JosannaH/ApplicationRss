@@ -18,6 +18,12 @@ namespace BusinessLogic
         public List<Episode> ListOfEpisodes { get; set; }
         public int NumberOfEpisodes => ListOfEpisodes.Count();
 
+        public Feed(string name, string url, string category, List<Episode> listOfEpisodes) : base(name)
+        {
+            Url = url;
+            Category = category;
+            ListOfEpisodes = listOfEpisodes;
+        }
         public Feed(string name, string url, string category) : base(name)
         {
             Url = url;
@@ -28,12 +34,5 @@ namespace BusinessLogic
         {
 
         }
-
-        public void SetListOfEpisodesToListView()
-        {
-
-        }
-
-
     }
 }
