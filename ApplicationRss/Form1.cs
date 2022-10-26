@@ -25,6 +25,7 @@ namespace ApplicationRss
     {
         List<Feed> ListOfFeeds = new List<Feed>();
         List<Category> ListOfCategories = new List<Category> { new Category("News"), new Category("Fashion") };
+        SerializerForXml serializerForXml = new SerializerForXml();
 
         public Form1()
         {
@@ -55,8 +56,7 @@ namespace ApplicationRss
             Feed feed = new Feed(name, url,category);
             feed.ListOfEpisodes = CreateListOfEpisodes(url, feed);
             ListOfFeeds.Add(feed);
-
-            SerializerForXml serializerForXml = new SerializerForXml();
+           
             serializerForXml.SerializeFeed(ListOfFeeds);
 
             ShowFeedsInListView(ListOfFeeds);
@@ -111,7 +111,6 @@ namespace ApplicationRss
                 UpdateCategoryNameForFeeds(oldCategoryName, newCategoryName, ListOfFeeds);
                 ShowFeedsInListView(ListOfFeeds);
             }
-            SerializerForXml serializerForXml = new SerializerForXml();
             serializerForXml.SerializeCategory(ListOfCategories);
 
             ShowCategoriesInListView(ListOfCategories);
@@ -127,19 +126,39 @@ namespace ApplicationRss
             string categoryName = lvCategories.SelectedItems[0].Text;
             tbNewCategoryName.Text = categoryName;
             btnSaveCategory.Text = "Save changes";
+            serializerForXml.SerializeCategory(ListOfCategories);
         }
 
         private void btnDeleteCategory_Click(object sender, EventArgs e)
         {
+            string categoryName = lvCategories.SelectedItems[0].Text;
+
+            for(int i = 0; i < ListOfCategories.Count; i++) {
+                if (ListOfCategories[i].Name.Equals(categoryName))
+                {
+                    ListOfCategories.RemoveAt(i);
+                }
+            }
+            for (int i = 0; i < ListOfFeeds.Count; i++)
+            {
+                if (ListOfFeeds[i].Category.Equals(categoryName))
+                {
+                    ListOfFeeds.RemoveAt(i);
+                }
+            }
+
+            serializerForXml.SerializeFeed(ListOfFeeds);
+            serializerForXml.SerializeCategory(ListOfCategories);
+            ShowCategoriesInComboboxes(ListOfCategories, cbCategory, cbSortByCategory);
+            ShowCategoriesInListView(ListOfCategories);
+            ShowFeedsInListView(ListOfFeeds);
+          
+
             // TODO: Delete category and all feeds in that category
             // TODO: Warning to user
             // TODO: Update listview
 
-            //SerializerForXml serializerForXml=new SerializerForXml();
-            //List<Feed> testList = new List<Feed>();
-            //Feed feed = new Feed();
-            //testList = serializerForXml.DeserializeFeed();
-            ////ShowFeedsInListView(testList);
+
         }
 
         private void ShowFeedsInListView(List<Feed> listOfFeeds)
@@ -289,8 +308,6 @@ namespace ApplicationRss
 
             return listOfEpisodes;
         }
-
-
 
         private void cbSortByCategory_SelectedIndexChanged(object sender, EventArgs e)
         {
