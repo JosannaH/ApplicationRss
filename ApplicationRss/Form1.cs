@@ -95,7 +95,7 @@ namespace ApplicationRss
                 ListOfCategories.Add(category);
           
             }
-            else
+            else if(btnSaveCategory.Text.Equals("Save changes"))
             {
                 string newCategoryName = tbNewCategoryName.Text;
                 string oldCategoryName = lvCategories.SelectedItems[0].Text;
@@ -108,6 +108,8 @@ namespace ApplicationRss
                     }
                 }
                 btnSaveCategory.Text = "Save category";
+                UpdateCategoryNameForFeeds(oldCategoryName, newCategoryName, ListOfFeeds);
+                ShowFeedsInListView(ListOfFeeds);
             }
             SerializerForXml serializerForXml = new SerializerForXml();
             serializerForXml.SerializeCategory(ListOfCategories);
@@ -119,6 +121,8 @@ namespace ApplicationRss
             // TODO: Update listview
             // TODO: add validation / exceptions on input
         }
+
+
 
         private void btnEditCategory_Click(object sender, EventArgs e)
         {
@@ -242,6 +246,17 @@ namespace ApplicationRss
                     episode.Description = item.Summary.Text;
                     // TODO: Fix so that new episodes show on top of listview!
                     feed.ListOfEpisodes.Add(episode);
+                }
+            }
+        }
+
+        private void UpdateCategoryNameForFeeds(string oldCategoryName, string newCategoryName, List<Feed> listOfFeeds)
+        {
+            foreach (Feed feed in listOfFeeds)
+            {
+                if (feed.Category.Equals(oldCategoryName))
+                {
+                    feed.Category = newCategoryName;
                 }
             }
         }
