@@ -36,12 +36,7 @@ namespace ApplicationRss
             ShowFeedsInListView(listOfFeeds);
             Console.WriteLine("Finns det nåt avsnitt i listan:  " + listOfFeeds[0].ListOfEpisodes[0].Name);
 
-            foreach (Episode episode in listOfFeeds[0].ListOfEpisodes)
-            {
-                ListViewItem row = new ListViewItem(episode.Name);
-
-                lvEpisodes.Items.Add(row);
-            }
+         
 
             cbCategory.Items.Add("Nyheter");
             //Episode testEpisode = new Episode();
@@ -59,13 +54,17 @@ namespace ApplicationRss
             string name = tbFeedName.Text;
             string category =  cbCategory.SelectedItem.ToString();
     
-            Feed feed = new Feed(name, url,category); //add listodepisodes as argument
+            Feed feed = new Feed(name, url,category);
+            feed.ListOfEpisodes = GetEpisodesFromUrl(url, feed);
             listOfFeeds.Add(feed);
+            listOfFeeds = addNewEpisodesToListOfFeeds(listOfFeeds);
 
             SerializerForXml serializerForXml = new SerializerForXml();
             serializerForXml.SerializeFeed(listOfFeeds);
 
             ShowFeedsInListView(listOfFeeds);
+            ShowEpisodesInListView(feed.ListOfEpisodes);
+            lvEpisodes.Columns[0].Text = feed.Name;
 
             tbUrl.Clear();
             tbFeedName.Clear();
@@ -139,9 +138,10 @@ namespace ApplicationRss
             foreach(Feed feed in listOfFeeds)
             {
                 ListViewItem row = new ListViewItem(feed.Name);
-                row.SubItems.Add("avsnitt"); // TODO: change to feed.NumberOfEpisodes
+                row.SubItems.Add(feed.NumberOfEpisodes.ToString());
                 row.SubItems.Add(feed.Category);
-  
+                row.Font = new Font(row.Font, FontStyle.Regular);
+
                 lvFeeds.Items.Add(row);
             }
         }
@@ -152,6 +152,7 @@ namespace ApplicationRss
             foreach (Episode episode in listOfEpisodes)
             {
                 ListViewItem row = new ListViewItem(episode.Name);
+                row.Font = new Font(row.Font, FontStyle.Regular);
 
                 lvEpisodes.Items.Add(row);
             }
@@ -170,9 +171,7 @@ namespace ApplicationRss
             {
                 Episode episode = new Episode();
                 episode.Name = item.Title.Text;
-                Console.WriteLine(episode.Name);
                 episode.Description = item.Summary.Text;
-                Console.WriteLine(episode.Description);
                 listOfRetrievedEpisodes.Add(episode);  
             }
 
@@ -221,7 +220,9 @@ namespace ApplicationRss
 
         private void lvFeeds_OnItemClick(object sender, EventArgs e)
         {
+            
             String feedName = ListViewHelper.GetSelectedItem(lvFeeds);
+            lvEpisodes.Columns[0].Text = feedName;
             List<Episode> listOfEpisodes = new List<Episode>();
             if (feedName != null)
             {

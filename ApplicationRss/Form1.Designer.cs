@@ -1,4 +1,6 @@
-﻿namespace ApplicationRss
+﻿using System.Drawing;
+
+namespace ApplicationRss
 {
     partial class Form1
     {
@@ -83,16 +85,19 @@
             // 
             this.columnFeedName.Text = "Name";
             this.columnFeedName.Width = 230;
+            this.columnFeedName.ListView.Font = new Font(this.columnFeedName.ListView.Font, FontStyle.Bold);
             // 
             // columnNoOfEpisodes
             // 
             this.columnNoOfEpisodes.Text = "Episodes";
             this.columnNoOfEpisodes.Width = 80;
+            this.columnNoOfEpisodes.ListView.Font = new Font(this.columnNoOfEpisodes.ListView.Font, FontStyle.Bold);
             // 
             // columnFeedCategory
             // 
             this.columnFeedCategory.Text = "Category";
             this.columnFeedCategory.Width = 121;
+            this.columnFeedCategory.ListView.Font = new Font(this.columnFeedCategory.ListView.Font, FontStyle.Bold);
             // 
             // lvEpisodes
             // 
@@ -338,6 +343,7 @@
             // 
             this.columnEpisodeName.Text = "Episode";
             this.columnEpisodeName.Width = 442;
+            this.columnEpisodeName.ListView.Font = new Font(this.columnEpisodeName.ListView.Font, FontStyle.Bold);
             // 
             // Form1
             // 
