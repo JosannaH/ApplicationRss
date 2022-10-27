@@ -39,10 +39,6 @@ namespace ApplicationRss
             ShowFeedsInListView(ListOfFeeds);
             ShowCategoriesInListView(ListOfCategories);
             ShowCategoriesInComboboxes(ListOfCategories, cbCategory, cbSortByCategory);
-
-
-            // TODO: deserialize category file
-            // TODO: populate category combobox
         }
 
         private void btnSaveFeed_Click(object sender, EventArgs e)
@@ -361,5 +357,7 @@ namespace ApplicationRss
             }
             ShowFeedsInListView(listOfFeedsByCategory);
         }
+
+
     }
 }
