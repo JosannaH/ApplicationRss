@@ -108,15 +108,16 @@ namespace ApplicationRss
             this.lvEpisodes.Location = new System.Drawing.Point(535, 58);
             this.lvEpisodes.MultiSelect = false;
             this.lvEpisodes.Name = "lvEpisodes";
-            this.lvEpisodes.Size = new System.Drawing.Size(442, 197);
+            this.lvEpisodes.Size = new System.Drawing.Size(442, 329);
             this.lvEpisodes.TabIndex = 0;
             this.lvEpisodes.UseCompatibleStateImageBehavior = false;
             this.lvEpisodes.View = System.Windows.Forms.View.Details;
+            this.lvEpisodes.Click += new System.EventHandler(this.lvEpisodes_OnItemClick);
             // 
             // columnEpisodeName
             // 
             this.columnEpisodeName.Text = "Episode";
-            this.columnEpisodeName.Width = 442;
+            this.columnEpisodeName.Width = 440;
             // 
             // lvCategories
             // 
@@ -231,9 +232,9 @@ namespace ApplicationRss
             // 
             // tbEpisodeSummary
             // 
-            this.tbEpisodeSummary.Location = new System.Drawing.Point(535, 306);
+            this.tbEpisodeSummary.Location = new System.Drawing.Point(535, 445);
             this.tbEpisodeSummary.Name = "tbEpisodeSummary";
-            this.tbEpisodeSummary.Size = new System.Drawing.Size(442, 377);
+            this.tbEpisodeSummary.Size = new System.Drawing.Size(442, 238);
             this.tbEpisodeSummary.TabIndex = 17;
             this.tbEpisodeSummary.Text = "";
             // 
@@ -261,7 +262,7 @@ namespace ApplicationRss
             // 
             this.lblEpisodeDescription.AutoSize = true;
             this.lblEpisodeDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.lblEpisodeDescription.Location = new System.Drawing.Point(530, 278);
+            this.lblEpisodeDescription.Location = new System.Drawing.Point(533, 417);
             this.lblEpisodeDescription.Name = "lblEpisodeDescription";
             this.lblEpisodeDescription.Size = new System.Drawing.Size(185, 25);
             this.lblEpisodeDescription.TabIndex = 20;
@@ -354,7 +355,7 @@ namespace ApplicationRss
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1005, 703);
+            this.ClientSize = new System.Drawing.Size(1005, 707);
             this.Controls.Add(this.btnEditCategory);
             this.Controls.Add(this.cbSortByCategory);
             this.Controls.Add(this.lblSortByCategory);

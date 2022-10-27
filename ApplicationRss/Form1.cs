@@ -16,6 +16,9 @@ using System.Security.Cryptography;
 using System.ServiceModel.Syndication;
 using System.Runtime.Remoting.Messaging;
 using System.Collections;
+using System.Web;
+using System.Security.Policy;
+using System.Xml.Linq;
 
 namespace ApplicationRss
 {
@@ -31,7 +34,13 @@ namespace ApplicationRss
         {
             InitializeComponent();
 
-            SerializerForXml serializerForXml = new SerializerForXml();
+            //// For testing
+            //Feed feed = new Feed("IMY", "https://www.imy.se/nyheter/rss/", "News");
+            //feed.ListOfEpisodes = CreateListOfEpisodes("https://www.imy.se/nyheter/rss/", feed);
+            //ListOfFeeds.Add(feed);
+            //serializerForXml.SerializeFeed(ListOfFeeds);
+            //ShowEpisodesInListView(GetListOfEpisodesForChosenFeed("IMY"));
+
             ListOfFeeds = serializerForXml.DeserializeFeed();
             ListOfCategories = serializerForXml.DeserializeCategory();
 
@@ -55,8 +64,6 @@ namespace ApplicationRss
                 Feed feed = new Feed(name, url, category);
                 feed.ListOfEpisodes = CreateListOfEpisodes(url, feed);
                 ListOfFeeds.Add(feed);
-                lvEpisodes.Columns[0].Text = name;
-                ShowEpisodesInListView(GetListOfEpisodesForChosenFeed(name));
             }
             else if (btnSaveFeed.Text.Equals("Save changes"))
             {
@@ -75,7 +82,9 @@ namespace ApplicationRss
                 }
             }
             serializerForXml.SerializeFeed(ListOfFeeds);
+            ShowEpisodesInListView(GetListOfEpisodesForChosenFeed(name));
             ShowFeedsInListView(ListOfFeeds);
+            lvEpisodes.Columns[0].Text = name;
 
             tbUrl.Clear();
             tbFeedName.Clear();
@@ -316,7 +325,7 @@ namespace ApplicationRss
         private void lvFeeds_OnItemClick(object sender, EventArgs e)
         {
             
-            String feedName = ListViewHelper.GetSelectedItem(lvFeeds);
+            string feedName = lvFeeds.SelectedItems[0].Text;
 
             // Change text on Episode listview header, to the name if chosen feed
             lvEpisodes.Columns[0].Text = feedName;
@@ -358,6 +367,20 @@ namespace ApplicationRss
             ShowFeedsInListView(listOfFeedsByCategory);
         }
 
+        private void lvEpisodes_OnItemClick(object sender, EventArgs e)
+        {
+            string episodeName = lvEpisodes.SelectedItems[0].Text;
 
+            foreach(Feed feed in ListOfFeeds)
+            {
+                foreach (Episode episode in feed.ListOfEpisodes)
+                    if (episode.Name.Equals(episodeName))
+                    {
+                        tbEpisodeSummary.Text = episode.Description;
+                    }
+                    
+            }
+        
+        }
     }
 }
