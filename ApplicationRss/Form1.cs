@@ -47,30 +47,60 @@ namespace ApplicationRss
 
         private void btnSaveFeed_Click(object sender, EventArgs e)
         {
+            // TODO: Look for duplicates
             // TODO: add validation / exceptions on input
 
             string url = tbUrl.Text;
             string name = tbFeedName.Text;
-            string category =  cbCategory.SelectedItem.ToString();
-    
-            Feed feed = new Feed(name, url,category);
-            feed.ListOfEpisodes = CreateListOfEpisodes(url, feed);
-            ListOfFeeds.Add(feed);
-           
-            serializerForXml.SerializeFeed(ListOfFeeds);
+            string category = cbCategory.SelectedItem.ToString();
 
+            if (btnSaveFeed.Text.Equals("Save Feed"))
+            {
+                Feed feed = new Feed(name, url, category);
+                feed.ListOfEpisodes = CreateListOfEpisodes(url, feed);
+                ListOfFeeds.Add(feed);
+                lvEpisodes.Columns[0].Text = name;
+                ShowEpisodesInListView(GetListOfEpisodesForChosenFeed(name));
+            }
+            else if (btnSaveFeed.Text.Equals("Save changes"))
+            {
+                string chosenFeedName = lvFeeds.SelectedItems[0].Text;
+
+                for (int i = 0; i < ListOfFeeds.Count; i++) 
+                {
+                    string feedName = ListOfFeeds[i].Name;
+
+                    if (feedName.Equals(chosenFeedName))
+                    {
+                        ListOfFeeds[i].Name = name;
+                        ListOfFeeds[i].Url = url;
+                        ListOfFeeds[i].Category = category;
+                    }
+                }
+            }
+            serializerForXml.SerializeFeed(ListOfFeeds);
             ShowFeedsInListView(ListOfFeeds);
-            ShowEpisodesInListView(feed.ListOfEpisodes);
-            lvEpisodes.Columns[0].Text = feed.Name;
 
             tbUrl.Clear();
             tbFeedName.Clear();
+            
         }
 
         private void btnEditFeed_Click(object sender, EventArgs e)
         {
-   
 
+            btnSaveFeed.Text = "Save changes";
+
+            string chosenFeed = lvFeeds.SelectedItems[0].Text;
+
+            for(int i = 0; i < ListOfFeeds.Count; i++) {
+                if (chosenFeed.Equals(ListOfFeeds[i].Name))
+                {
+                    tbFeedName.Text = ListOfFeeds[i].Name;
+                    tbUrl.Text = ListOfFeeds[i].Url;
+                    cbCategory.SelectedItem = ListOfFeeds[i].Category;
+                }
+                    }
 
             // TODO: populate URL and name
             // TODO: populate interval combobox, start with current choise
@@ -101,7 +131,9 @@ namespace ApplicationRss
 
         private void btnSaveCategory_Click(object sender, EventArgs e)
         {
-            if(btnSaveCategory.Text.Equals("Save category"))
+            // TODO: Look for duplicates
+
+            if (btnSaveCategory.Text.Equals("Save category"))
             {
                 string categoryName = tbNewCategoryName.Text;
                 Category category = new Category(categoryName);
@@ -137,7 +169,7 @@ namespace ApplicationRss
             string categoryName = lvCategories.SelectedItems[0].Text;
             tbNewCategoryName.Text = categoryName;
             btnSaveCategory.Text = "Save changes";
-            serializerForXml.SerializeCategory(ListOfCategories);
+            serializerForXml.SerializeCategory(ListOfCategories); // is this needed?
         }
 
         private void btnDeleteCategory_Click(object sender, EventArgs e)
