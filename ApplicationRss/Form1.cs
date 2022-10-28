@@ -281,7 +281,7 @@ namespace ApplicationRss
             }
         }
 
-        private void UpdateEpisodesForOneFeed(String url, Feed feed)
+        private void UpdateEpisodesForOneFeed(string url, Feed feed)
         { 
             // TODO: XmlException 
             XmlReader xmlReader = XmlReader.Create(url);
@@ -290,11 +290,11 @@ namespace ApplicationRss
 
             foreach (var item in syndicationFeed.Items)
             {
-                String newEpisode = item.Title.Text;
+                string newEpisode = item.Title.Text;
 
                     foreach (var episodeItem in feed.ListOfEpisodes)
                     {
-                        String oldEpisode = episodeItem.Name;
+                        string oldEpisode = episodeItem.Name;
 
                         if (newEpisode.Equals(oldEpisode))
                         {
@@ -338,10 +338,14 @@ namespace ApplicationRss
 
         private List<Episode> GetListOfEpisodesForChosenFeed(String feedName)
         {
+            
+            
             List<Episode> listOfEpisodes = new List<Episode>();
 
             if (feedName != null)
             {
+                //List<Feed> chosenFeed = ListOfFeeds.Where(x => x.Name.Equals(feedName)).ToList();
+                //listOfEpisodes = chosenFeed[0].ListOfEpisodes;
                 foreach (Feed feed in ListOfFeeds)
                 {
                     if (feed.Name.Equals(feedName))
@@ -351,7 +355,8 @@ namespace ApplicationRss
                 }
             }
 
-            return listOfEpisodes;
+                return listOfEpisodes;
+
         }
 
         private void cbSortByCategory_SelectedIndexChanged(object sender, EventArgs e)
