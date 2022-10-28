@@ -357,31 +357,29 @@ namespace ApplicationRss
         private void cbSortByCategory_SelectedIndexChanged(object sender, EventArgs e)
         {
             string category = cbSortByCategory.SelectedItem.ToString();
-            List<Feed> listOfFeedsByCategory = new List<Feed>();
-            foreach (Feed feed in ListOfFeeds)
-            {
-                if (feed.Category.Equals(category))
-                {
-                    listOfFeedsByCategory.Add(feed);
-                }
-            }
-            ShowFeedsInListView(listOfFeedsByCategory);
+           
+            ShowFeedsInListView(SortFeedsByCategory(ListOfFeeds, category));
+        }
+
+        private List<Feed> SortFeedsByCategory(List<Feed> listOfFeeds, string category)
+        {
+            listOfFeeds = listOfFeeds.Where(x => x.Category.Equals(category)).ToList();
+            return listOfFeeds;
         }
 
         private void lvEpisodes_OnItemClick(object sender, EventArgs e)
         {
             string episodeName = lvEpisodes.SelectedItems[0].Text;
+            string currentFeed = lvFeeds.SelectedItems[0].Text;
+            List<Feed> chosenFeed = ListOfFeeds.Where(x => x.Name.Equals(currentFeed)).ToList();
+            List<Episode> chosenEpisode = chosenFeed[0].ListOfEpisodes.Where(x => x.Name.Equals(episodeName)).ToList();
 
-            foreach(Feed feed in ListOfFeeds)
-            {
-                foreach (Episode episode in feed.ListOfEpisodes)
-                    if (episode.Name.Equals(episodeName))
-                    {
-                        tbEpisodeSummary.Text = episode.Description;
-                    }
-                    
-            }
+            tbEpisodeSummary.Text = chosenEpisode[0].Description;
+    
         
         }
+
+
+
     }
 }
