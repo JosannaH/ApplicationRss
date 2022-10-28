@@ -102,14 +102,11 @@ namespace ApplicationRss
 
             string chosenFeed = lvFeeds.SelectedItems[0].Text;
 
-            for(int i = 0; i < ListOfFeeds.Count; i++) {
-                if (chosenFeed.Equals(ListOfFeeds[i].Name))
-                {
-                    tbFeedName.Text = ListOfFeeds[i].Name;
-                    tbUrl.Text = ListOfFeeds[i].Url;
-                    cbCategory.SelectedItem = ListOfFeeds[i].Category;
-                }
-                    }
+            List<Feed> feedToEdit = ListOfFeeds.Where(x => x.Name.Equals(chosenFeed)).ToList();
+
+            tbFeedName.Text = feedToEdit[0].Name;
+            tbUrl.Text = feedToEdit[0].Url;
+            cbCategory.SelectedItem = feedToEdit[0].Category;
 
             // TODO: populate URL and name
             // TODO: populate interval combobox, start with current choise
@@ -121,15 +118,10 @@ namespace ApplicationRss
 
         private void btnDeleteFeed_Click(object sender, EventArgs e)
         {
-            String feedName = ListViewHelper.GetSelectedItem(lvFeeds);
+            string feedName = lvFeeds.SelectedItems[0].Text;
 
-            for (int i = 0; i < ListOfFeeds.Count; i++)
-            {
-                if(ListOfFeeds[i].Name.Equals(feedName))
-                {
-                    ListOfFeeds.RemoveAt(i);
-                }
-            }
+            ListOfFeeds = ListOfFeeds.Where(x => x.Name != feedName).ToList();
+
             serializerForXml.SerializeFeed(ListOfFeeds);
             ShowFeedsInListView(ListOfFeeds);
             lvEpisodes.Items.Clear();
@@ -154,13 +146,9 @@ namespace ApplicationRss
                 string newCategoryName = tbNewCategoryName.Text;
                 string oldCategoryName = lvCategories.SelectedItems[0].Text;
 
-                foreach (Category category in ListOfCategories)
-                {
-                    if (category.Name.Equals(oldCategoryName))
-                    {
-                        category.Name = newCategoryName;
-                    }
-                }
+                List<Category> categoryToChange = ListOfCategories.Where(x => x.Name.Equals(oldCategoryName)).ToList();
+                categoryToChange[0].Name = newCategoryName;
+
                 btnSaveCategory.Text = "Save category";
                 UpdateCategoryNameForFeeds(oldCategoryName, newCategoryName, ListOfFeeds);
                 ShowFeedsInListView(ListOfFeeds);
@@ -178,28 +166,16 @@ namespace ApplicationRss
             string categoryName = lvCategories.SelectedItems[0].Text;
             tbNewCategoryName.Text = categoryName;
             btnSaveCategory.Text = "Save changes";
-            serializerForXml.SerializeCategory(ListOfCategories); // is this needed?
         }
 
         private void btnDeleteCategory_Click(object sender, EventArgs e)
         {
             string categoryName = lvCategories.SelectedItems[0].Text;
 
-            for(int i = 0; i < ListOfCategories.Count; i++) {
-                if (ListOfCategories[i].Name.Equals(categoryName))
-                {
-                    ListOfCategories.RemoveAt(i);
-                }
-            }
-            for (int i = 0; i < ListOfFeeds.Count; i++)
-            {
-                if (ListOfFeeds[i].Category.Equals(categoryName))
-                {
-                    ListOfFeeds.RemoveAt(i);
-                }
-            }
+            ListOfCategories = ListOfCategories.Where(x => x.Name != categoryName).ToList();    
 
-             
+            ListOfFeeds = ListOfFeeds.Where(x => x.Category != categoryName).ToList();
+  
             serializerForXml.SerializeFeed(ListOfFeeds);
             serializerForXml.SerializeCategory(ListOfCategories);
             ShowCategoriesInComboboxes(ListOfCategories, cbCategory, cbSortByCategory);
@@ -280,63 +256,60 @@ namespace ApplicationRss
         {
             foreach(Feed feed in listOfFeeds)
             {
-                UpdateEpisodesForOneFeed(feed.Url, feed);
+                feed.ListOfEpisodes = UpdateEpisodesForOneFeed(feed.Url, feed);
             }
         }
 
-        private void UpdateEpisodesForOneFeed(string url, Feed feed)
+        private List<Episode> UpdateEpisodesForOneFeed(string url, Feed feed)
         { 
             // TODO: XmlException 
             XmlReader xmlReader = XmlReader.Create(url);
             SyndicationFeed syndicationFeed = SyndicationFeed.Load(xmlReader);
             Boolean isNew = true;
 
+            List<Episode> updatedListOfEpisodes = new List<Episode>();
+
             foreach (var item in syndicationFeed.Items)
             {
-                string newEpisode = item.Title.Text;
+                string fetchedEpisode = item.Title.Text;
 
-                    foreach (var episodeItem in feed.ListOfEpisodes)
-                    {
-                        string oldEpisode = episodeItem.Name;
-
-                        if (newEpisode.Equals(oldEpisode))
-                        {
-                        isNew = false;
-                        }
-                    }
+                List<Episode> listOfEpisodes = feed.ListOfEpisodes.Where(x => x.Name.Equals(fetchedEpisode)).ToList();
+                if(listOfEpisodes.Count > 0)
+                {
+                    isNew = false;
+                }
 
                 if (isNew) {
                     Episode episode = new Episode();
                     episode.Name = item.Title.Text;
                     episode.Description = item.Summary.Text;
                     // TODO: Fix so that new episodes show on top of listview!
-                    feed.ListOfEpisodes.Add(episode);
+                    //feed.ListOfEpisodes.Add(episode);
+                    updatedListOfEpisodes.Add(episode);
                 }
             }
+            updatedListOfEpisodes.AddRange(feed.ListOfEpisodes);
+            return updatedListOfEpisodes;
         }
 
         private void UpdateCategoryNameForFeeds(string oldCategoryName, string newCategoryName, List<Feed> listOfFeeds)
         {
-            foreach (Feed feed in listOfFeeds)
+            List<Feed> feedsWithCategory = listOfFeeds.Where(x => x.Category.Equals(oldCategoryName)).ToList();
+
+            foreach (Feed feed in feedsWithCategory)
             {
-                if (feed.Category.Equals(oldCategoryName))
-                {
                     feed.Category = newCategoryName;
-                }
             }
         }
 
         private void lvFeeds_OnItemClick(object sender, EventArgs e)
         {
-            
             NameOfChosenFeed = lvFeeds.SelectedItems[0].Text;
 
             // Change text on Episode listview header, to the name if chosen feed
             lvEpisodes.Columns[0].Text = NameOfChosenFeed;
            
-          
             ShowEpisodesInListView(GetListOfEpisodesForChosenFeed(NameOfChosenFeed)); 
-
         }
 
         private List<Episode> GetListOfEpisodesForChosenFeed(String feedName)
@@ -345,19 +318,10 @@ namespace ApplicationRss
 
             if (feedName != null)
             {
-                //List<Feed> chosenFeed = ListOfFeeds.Where(x => x.Name.Equals(feedName)).ToList();
-                //listOfEpisodes = chosenFeed[0].ListOfEpisodes;
-                foreach (Feed feed in ListOfFeeds)
-                {
-                    if (feed.Name.Equals(feedName))
-                    {
-                        listOfEpisodes = feed.ListOfEpisodes;
-                    }
-                }
+                List<Feed> chosenFeed = ListOfFeeds.Where(x => x.Name.Equals(feedName)).ToList();
+                listOfEpisodes = chosenFeed[0].ListOfEpisodes;
             }
-
                 return listOfEpisodes;
-
         }
 
         private void cbSortByCategory_SelectedIndexChanged(object sender, EventArgs e)
