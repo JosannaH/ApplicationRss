@@ -80,6 +80,7 @@ namespace ApplicationRss
                         ListOfFeeds[i].Category = category;
                     }
                 }
+                btnSaveFeed.Text = "Save feed";
             }
             serializerForXml.SerializeFeed(ListOfFeeds);
             ShowEpisodesInListView(GetListOfEpisodesForChosenFeed(name));
