@@ -27,8 +27,9 @@ namespace ApplicationRss
     public partial class Form1 : Form
     {
         List<Feed> ListOfFeeds = new List<Feed>();
-        List<Category> ListOfCategories = new List<Category> { new Category("News"), new Category("Fashion") };
+        List<Category> ListOfCategories = new List<Category>(); //{ new Category("News"), new Category("Fashion") };
         SerializerForXml serializerForXml = new SerializerForXml();
+        string NameOfChosenFeed;
 
         public Form1()
         {
@@ -58,8 +59,9 @@ namespace ApplicationRss
             string url = tbUrl.Text;
             string name = tbFeedName.Text;
             string category = cbCategory.SelectedItem.ToString();
+            NameOfChosenFeed = name; 
 
-            if (btnSaveFeed.Text.Equals("Save Feed"))
+            if (btnSaveFeed.Text.Equals("Save feed"))
             {
                 Feed feed = new Feed(name, url, category);
                 feed.ListOfEpisodes = CreateListOfEpisodes(url, feed);
@@ -82,6 +84,7 @@ namespace ApplicationRss
                 }
                 btnSaveFeed.Text = "Save feed";
             }
+            
             serializerForXml.SerializeFeed(ListOfFeeds);
             ShowEpisodesInListView(GetListOfEpisodesForChosenFeed(name));
             ShowFeedsInListView(ListOfFeeds);
@@ -326,20 +329,18 @@ namespace ApplicationRss
         private void lvFeeds_OnItemClick(object sender, EventArgs e)
         {
             
-            string feedName = lvFeeds.SelectedItems[0].Text;
+            NameOfChosenFeed = lvFeeds.SelectedItems[0].Text;
 
             // Change text on Episode listview header, to the name if chosen feed
-            lvEpisodes.Columns[0].Text = feedName;
+            lvEpisodes.Columns[0].Text = NameOfChosenFeed;
            
           
-            ShowEpisodesInListView(GetListOfEpisodesForChosenFeed(feedName)); 
+            ShowEpisodesInListView(GetListOfEpisodesForChosenFeed(NameOfChosenFeed)); 
 
         }
 
         private List<Episode> GetListOfEpisodesForChosenFeed(String feedName)
         {
-            
-            
             List<Episode> listOfEpisodes = new List<Episode>();
 
             if (feedName != null)
@@ -374,17 +375,20 @@ namespace ApplicationRss
 
         private void lvEpisodes_OnItemClick(object sender, EventArgs e)
         {
-            string episodeName = lvEpisodes.SelectedItems[0].Text;
-            string currentFeed = lvFeeds.SelectedItems[0].Text;
-            List<Feed> chosenFeed = ListOfFeeds.Where(x => x.Name.Equals(currentFeed)).ToList();
-            List<Episode> chosenEpisode = chosenFeed[0].ListOfEpisodes.Where(x => x.Name.Equals(episodeName)).ToList();
-
-            tbEpisodeSummary.Text = chosenEpisode[0].Description;
+            string nameOfChosenEpisode = lvEpisodes.SelectedItems[0].Text;
+            ShowEpisodeDescriptionInTextBox(NameOfChosenFeed, nameOfChosenEpisode);
+  
     
         
         }
 
+        private void ShowEpisodeDescriptionInTextBox(string nameOfChosenFeed, string nameOfChosenEpisode)
+        {
+            List<Feed> chosenFeed = ListOfFeeds.Where(x => x.Name.Equals(nameOfChosenFeed)).ToList();
+            List<Episode> chosenEpisode = chosenFeed[0].ListOfEpisodes.Where(x => x.Name.Equals(nameOfChosenEpisode)).ToList();
 
+            tbEpisodeSummary.Text = chosenEpisode[0].Description;
+        }
 
     }
 }
