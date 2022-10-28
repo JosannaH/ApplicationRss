@@ -69,19 +69,14 @@ namespace ApplicationRss
             }
             else if (btnSaveFeed.Text.Equals("Save changes"))
             {
-                string chosenFeedName = lvFeeds.SelectedItems[0].Text;
+                string chosenFeed = lvFeeds.SelectedItems[0].Text;
 
-                for (int i = 0; i < ListOfFeeds.Count; i++) 
-                {
-                    string feedName = ListOfFeeds[i].Name;
+                List<Feed> feedToEdit = ListOfFeeds.Where(x => x.Name.Equals(chosenFeed)).ToList();
 
-                    if (feedName.Equals(chosenFeedName))
-                    {
-                        ListOfFeeds[i].Name = name;
-                        ListOfFeeds[i].Url = url;
-                        ListOfFeeds[i].Category = category;
-                    }
-                }
+                feedToEdit[0].Name = name;
+                feedToEdit[0].Url = url;
+                feedToEdit[0].Category = category;
+       
                 btnSaveFeed.Text = "Save feed";
             }
             
