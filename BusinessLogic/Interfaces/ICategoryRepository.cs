@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLogic
 {
-    internal interface ICategoryRepository<Category> : IRepository<Category>
+    public interface ICategoryRepository<Category> : IRepository<Category>
     {
         void Update(Category category);
         void Delete(Category category);
