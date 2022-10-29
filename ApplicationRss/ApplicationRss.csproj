@@ -93,6 +93,10 @@
       <Project>{A79774CC-5EF0-44A7-9743-DB45DC6C3CF2}</Project>
       <Name>BusinessLogic</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Models\Models.csproj">
+      <Project>{5fed5b13-98af-4157-b3ba-c6b81b2ed745}</Project>
+      <Name>Models</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BusinessLogic
+namespace BusinessLogic.Controllers
 {
-    public interface IRepository<T> 
+    internal class FeedController
     {
-        void Create(T entity);
-        List<T> GetAll();
     }
 }

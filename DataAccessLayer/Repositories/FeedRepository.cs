@@ -1,5 +1,4 @@
-﻿using ApplicationRss;
-using BusinessLogic;
+﻿using Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +8,12 @@ using System.Threading.Tasks;
 
 namespace DataAccess
 {
-    public class FeedRepository : IFeedRepository<Feed>
+    public class FeedRepository : IRepository<Feed>
     {
         SerializerForXml serializerForXml;
         List<Feed> ListOfFeeds;
+
+
         public void Create(Feed entity)
         {
 

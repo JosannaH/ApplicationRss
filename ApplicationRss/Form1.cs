@@ -19,6 +19,8 @@ using System.Collections;
 using System.Web;
 using System.Security.Policy;
 using System.Xml.Linq;
+using Models;
+
 
 namespace ApplicationRss
 {
