@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace DataAccessLayer
+namespace DataAccess
 {
     public class FeedRepository : IFeedRepository<Feed>
     {
