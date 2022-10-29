@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace DataAccessLayer
+namespace BusinessLogic
 {
     public interface IFeedRepository<Feed> : IRepository<Feed>    
     {
