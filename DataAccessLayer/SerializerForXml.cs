@@ -1,5 +1,4 @@
-﻿using BusinessLogic;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,13 +7,17 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using System.Xml;
 using System.Runtime.Serialization;
+using Models;
 
 
 namespace DataAccess
 {
     public class SerializerForXml
     {
+        public SerializerForXml()
+        {
 
+        }
         public void SerializeFeed(List<Feed> listOfFeeds)
         {
             try

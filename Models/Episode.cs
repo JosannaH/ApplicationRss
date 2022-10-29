@@ -12,9 +12,9 @@ namespace Models
     public class Episode : Entity
     {
         public string Description { get; set; }
-        public Episode()
+        public Episode(string name, string description) : base(name)
         {
-
+            Description = description;
         }
     }
 }

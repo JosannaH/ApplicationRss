@@ -10,8 +10,8 @@ namespace DataAccess
     public interface IRepository<T> 
     {
         void Create(T entity);
-        void Update(T entity);
-        void Delete(T entity);
-        List<T> GetAll();
+        List<T> Read();
+        void Update();
+        void Delete(List<T> listOfEntities);
     }
 }

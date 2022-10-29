@@ -20,7 +20,7 @@ using System.Web;
 using System.Security.Policy;
 using System.Xml.Linq;
 using Models;
-
+using BusinessLogic.Controllers;
 
 namespace ApplicationRss
 {
@@ -28,14 +28,25 @@ namespace ApplicationRss
     [XmlInclude(typeof(Form1))]
     public partial class Form1 : Form
     {
-        List<Feed> ListOfFeeds = new List<Feed>();
-        List<Category> ListOfCategories = new List<Category>(); //{ new Category("News"), new Category("Fashion") };
-        SerializerForXml serializerForXml = new SerializerForXml();
-        string NameOfChosenFeed;
+        FeedController FeedController;
+        EpisodeController EpisodeController;
+
+
+       // List<Feed> ListOfFeeds = new List<Feed>();
+       // List<Category> ListOfCategories = new List<Category>(); //{ new Category("News"), new Category("Fashion") };
+       // SerializerForXml serializerForXml = new SerializerForXml();
+
+
+        
 
         public Form1()
         {
             InitializeComponent();
+            FeedController = new FeedController();
+            EpisodeController = new EpisodeController();
+
+            FeedController.ReadListOfFeedsFromFile();
+
 
             //// For testing
             //Feed feed = new Feed("IMY", "https://www.imy.se/nyheter/rss/", "News");
@@ -44,7 +55,10 @@ namespace ApplicationRss
             //serializerForXml.SerializeFeed(ListOfFeeds);
             //ShowEpisodesInListView(GetListOfEpisodesForChosenFeed("IMY"));
 
-            ListOfFeeds = serializerForXml.DeserializeFeed();
+
+
+
+
             ListOfCategories = serializerForXml.DeserializeCategory();
 
             UpdateEpisodesForAllFeeds(ListOfFeeds);
@@ -61,70 +75,52 @@ namespace ApplicationRss
             string url = tbUrl.Text;
             string name = tbFeedName.Text;
             string category = cbCategory.SelectedItem.ToString();
-            NameOfChosenFeed = name; 
 
             if (btnSaveFeed.Text.Equals("Save feed"))
             {
-                Feed feed = new Feed(name, url, category);
-                feed.ListOfEpisodes = CreateListOfEpisodes(url, feed);
-                ListOfFeeds.Add(feed);
+                FeedController.CreateFeed(name, url, category);   
             }
             else if (btnSaveFeed.Text.Equals("Save changes"))
             {
                 string chosenFeed = lvFeeds.SelectedItems[0].Text;
-
-                List<Feed> feedToEdit = ListOfFeeds.Where(x => x.Name.Equals(chosenFeed)).ToList();
-
-                feedToEdit[0].Name = name;
-                feedToEdit[0].Url = url;
-                feedToEdit[0].Category = category;
-       
+                FeedController.UpdateFeed(chosenFeed, name, url, category);
                 btnSaveFeed.Text = "Save feed";
             }
-            
-            serializerForXml.SerializeFeed(ListOfFeeds);
-            ShowEpisodesInListView(GetListOfEpisodesForChosenFeed(name));
-            ShowFeedsInListView(ListOfFeeds);
+
+            ShowEpisodesInListView(FeedController.GetListOfEpisodesForFeed(name));
+            ShowFeedsInListView(FeedController.GetListOfAllFeeds());
+
+            // Set name of feed as column header in Episodes listview
             lvEpisodes.Columns[0].Text = name;
 
             tbUrl.Clear();
             tbFeedName.Clear();
-            
+            // TODO: clear combobox
         }
 
         private void btnEditFeed_Click(object sender, EventArgs e)
         {
-
             btnSaveFeed.Text = "Save changes";
 
             string chosenFeed = lvFeeds.SelectedItems[0].Text;
 
-            List<Feed> feedToEdit = ListOfFeeds.Where(x => x.Name.Equals(chosenFeed)).ToList();
+            List<Feed> feedToEdit = FeedController.GetListOfAllFeeds().Where(x => x.Name.Equals(chosenFeed)).ToList();
 
+            // Fill boxes with current feed information
             tbFeedName.Text = feedToEdit[0].Name;
             tbUrl.Text = feedToEdit[0].Url;
             cbCategory.SelectedItem = feedToEdit[0].Category;
-
-            // TODO: populate URL and name
-            // TODO: populate interval combobox, start with current choise
-            // TODO: populate category combobox, start with current choise
-            // TODO: Update listview
-
-            // TODO: add validation / exceptions on input  
         }
 
         private void btnDeleteFeed_Click(object sender, EventArgs e)
         {
             string feedName = lvFeeds.SelectedItems[0].Text;
+            FeedController.DeleteFeed(feedName);
 
-            ListOfFeeds = ListOfFeeds.Where(x => x.Name != feedName).ToList();
-
-            serializerForXml.SerializeFeed(ListOfFeeds);
-            ShowFeedsInListView(ListOfFeeds);
+            ShowFeedsInListView(FeedController.GetListOfAllFeeds());
+           
             lvEpisodes.Items.Clear();
             lvEpisodes.Columns[0].Text = "";
-
-
         }
 
         private void btnSaveCategory_Click(object sender, EventArgs e)
@@ -309,17 +305,7 @@ namespace ApplicationRss
             ShowEpisodesInListView(GetListOfEpisodesForChosenFeed(NameOfChosenFeed)); 
         }
 
-        private List<Episode> GetListOfEpisodesForChosenFeed(String feedName)
-        {
-            List<Episode> listOfEpisodes = new List<Episode>();
 
-            if (feedName != null)
-            {
-                List<Feed> chosenFeed = ListOfFeeds.Where(x => x.Name.Equals(feedName)).ToList();
-                listOfEpisodes = chosenFeed[0].ListOfEpisodes;
-            }
-                return listOfEpisodes;
-        }
 
         private void cbSortByCategory_SelectedIndexChanged(object sender, EventArgs e)
         {

@@ -10,29 +10,37 @@ namespace DataAccess
 {
     public class FeedRepository : IRepository<Feed>
     {
-        SerializerForXml serializerForXml;
-        List<Feed> ListOfFeeds;
+        SerializerForXml SerializerForXml;
+        public List<Feed> ListOfFeeds { get; set; }    
 
-
-        public void Create(Feed entity)
+        public FeedRepository()
         {
-
-            throw new NotImplementedException();
+            SerializerForXml = new SerializerForXml();
+           
+        }
+        public void Create(Feed feed)
+        {
+            ListOfFeeds.Add(feed);
+            SerializerForXml.SerializeFeed(ListOfFeeds);
         }
 
-        public void Delete(Feed feed)
+        public List<Feed> Read()
         {
-            throw new NotImplementedException();
+            ListOfFeeds = SerializerForXml.DeserializeFeed();
+            return ListOfFeeds;
         }
 
-        public List<Feed> GetAll()
+        public void Update()
         {
-            throw new NotImplementedException();
+            SerializerForXml.SerializeFeed(ListOfFeeds);
         }
 
-        public void Update(Feed feed)
+        public void Delete(List<Feed> listOfFeeds)
         {
-            throw new NotImplementedException();
+            ListOfFeeds = listOfFeeds;
+            SerializerForXml.SerializeFeed(ListOfFeeds);
         }
+
+
     }
 }
