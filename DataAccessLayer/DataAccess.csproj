@@ -48,9 +48,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CategoryRepository.cs" />
-    <Compile Include="EpisodeRepository.cs" />
-    <Compile Include="FeedRepository.cs" />
+    <Compile Include="Repositories\CategoryRepository.cs" />
+    <Compile Include="Repositories\EpisodeRepository.cs" />
+    <Compile Include="Repositories\FeedRepository.cs" />
     <Compile Include="ICategoryRepository.cs" />
     <Compile Include="IFeedRepository.cs" />
     <Compile Include="IRepository.cs" />
