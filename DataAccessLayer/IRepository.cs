@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BusinessLogic
+namespace DataAccessLayer
 {
-    public class Class1
+    public interface IRepository<T> 
     {
+        void Create(T entity);
+        List<T> GetAll();
     }
 }

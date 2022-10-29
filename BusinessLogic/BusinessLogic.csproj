@@ -49,10 +49,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Category.cs" />
-    <Compile Include="Class1.cs" />
     <Compile Include="Episode.cs" />
     <Compile Include="Feed.cs" />
-    <Compile Include="IListable.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

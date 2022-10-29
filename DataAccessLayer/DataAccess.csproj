@@ -48,11 +48,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="CategoryRepository.cs" />
+    <Compile Include="EpisodeRepository.cs" />
+    <Compile Include="FeedRepository.cs" />
+    <Compile Include="ICategoryRepository.cs" />
+    <Compile Include="IFeedRepository.cs" />
+    <Compile Include="IRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ApplicationRss\ApplicationRss.csproj">
+      <Project>{B5D4649F-F32D-4AE2-AA1D-00604CA0C9DD}</Project>
+      <Name>ApplicationRss</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BusinessLogic\BusinessLogic.csproj">
+      <Project>{A79774CC-5EF0-44A7-9743-DB45DC6C3CF2}</Project>
+      <Name>BusinessLogic</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -53,7 +53,7 @@ namespace ApplicationRss
 
         private void btnSaveFeed_Click(object sender, EventArgs e)
         {
-            // TODO: Look for duplicates
+            // TODO: Look for duplicates in first URL and then name
             // TODO: add validation / exceptions on input
 
             string url = tbUrl.Text;
@@ -278,11 +278,11 @@ namespace ApplicationRss
                     Episode episode = new Episode();
                     episode.Name = item.Title.Text;
                     episode.Description = item.Summary.Text;
-                    // TODO: Fix so that new episodes show on top of listview!
-                    //feed.ListOfEpisodes.Add(episode);
+
                     updatedListOfEpisodes.Add(episode);
                 }
             }
+            // The new episodes will be first in the list
             updatedListOfEpisodes.AddRange(feed.ListOfEpisodes);
             return updatedListOfEpisodes;
         }

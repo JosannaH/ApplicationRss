@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer
 {
-    public class Class1
+    internal interface ICategoryRepository<Category> : IRepository<Category>
     {
+        void Update(Category category);
+        void Delete(Category category);
     }
 }
