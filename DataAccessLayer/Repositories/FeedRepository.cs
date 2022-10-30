@@ -1,21 +1,18 @@
 ﻿using Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+using System.IO;
+using System.Runtime.Remoting.Messaging;
 
 namespace DataAccess
 {
     public class FeedRepository : IRepository<Feed>
     {
-        SerializerForXml SerializerForXml = new SerializerForXml();
+        SerializerForXml SerializerForXml;
         public List<Feed> ListOfFeeds { get; set; }    
 
         public FeedRepository()
         {
-            //SerializerForXml = new SerializerForXml();
+            SerializerForXml = new SerializerForXml();
         }
         public void Create(Feed feed)
         {
@@ -40,6 +37,9 @@ namespace DataAccess
             SerializerForXml.SerializeFeed(ListOfFeeds);
         }
 
-
+        public bool CheckForFile() { 
+        
+            return File.Exists("Feeds.xml");
+        }
     }
 }

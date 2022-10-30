@@ -49,5 +49,10 @@ namespace BusinessLogic.Controllers
         {
             return CategoryRepository.ListOfCategories;
         }
+
+        public bool FileOfFeedsExists()
+        {
+            return CategoryRepository.CheckForFile();
+        }
     }
 }

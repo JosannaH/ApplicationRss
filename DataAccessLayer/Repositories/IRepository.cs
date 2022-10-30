@@ -8,5 +8,6 @@ namespace DataAccess
         List<T> Read();
         void Update();
         void Delete(List<T> listOfEntities);
+        bool CheckForFile();
     }
 }

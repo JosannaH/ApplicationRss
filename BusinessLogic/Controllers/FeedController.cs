@@ -138,5 +138,10 @@ namespace BusinessLogic.Controllers
             List<Feed> ListOfSortedFeeds = GetListOfAllFeeds().Where(x => x.Category.Equals(category)).ToList();
             return ListOfSortedFeeds;
         }
+
+        public bool FileOfFeedsExists()
+        {
+            return FeedRepository.CheckForFile();
+        }
     }
 }

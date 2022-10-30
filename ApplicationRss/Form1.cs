@@ -39,10 +39,6 @@ namespace ApplicationRss
 
         // List<Feed> ListOfFeeds = new List<Feed>();
         // List<Category> ListOfCategories = new List<Category>(); //{ new Category("News"), new Category("Fashion") };
-        // SerializerForXml serializerForXml = new SerializerForXml();
-
-
-
 
         public Form1()
         {
@@ -52,16 +48,26 @@ namespace ApplicationRss
             EpisodeController = new EpisodeController();
             CategoryController = new CategoryController();
 
-            ListOfFeeds = FeedController.ReadListOfFeedsFromFile();
-            ListOfCategories = CategoryController.ReadListOfCategoriesFromFile();
+            if(FeedController.FileOfFeedsExists())
+            {
+                ListOfFeeds = FeedController.ReadListOfFeedsFromFile();
+                // Read xml data from url
+                FeedController.UpdateEpisodesForAllFeeds(ListOfFeeds);
+                UpdateListOfFeeds();
+                ShowFeedsInListView();
+            }
+            if (CategoryController.FileOfFeedsExists())
+            {
+                ListOfCategories = CategoryController.ReadListOfCategoriesFromFile();
+                ShowCategoriesInListView();
+                ShowCategoriesInComboboxes();
+            }
 
-            // Read xml data from url
-            FeedController.UpdateEpisodesForAllFeeds(ListOfFeeds);
+            
+            
 
-            UpdateListOfFeeds();
-            ShowFeedsInListView();
-            ShowCategoriesInListView();
-            ShowCategoriesInComboboxes();
+            
+            
 
 
             //// For testing
@@ -237,6 +243,7 @@ namespace ApplicationRss
                 lvCategories.Items.Add(row);
             }
         }
+
         private void ShowCategoriesInComboboxes()
         {
             cbCategory.Items.Clear();
