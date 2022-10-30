@@ -19,7 +19,8 @@ namespace BusinessLogic.Controllers
 
         public FeedController()
         {
-
+            //FeedRepository = new FeedRepository();
+            //EpisodeController = new EpisodeController();
         }
 
         public void CreateFeed(string name, string url, string category)

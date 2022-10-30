@@ -11,12 +11,12 @@ namespace BusinessLogic.Controllers
     
     public class CategoryController
     {
-        CategoryRepository CategoryRepository;
-        FeedController FeedController;
+        CategoryRepository CategoryRepository = new CategoryRepository();
+        FeedController FeedController = new FeedController();
         public CategoryController()
         {
-            CategoryRepository = new CategoryRepository();
-            FeedController = new FeedController();
+            //CategoryRepository = new CategoryRepository();
+            //FeedController = new FeedController();
         }
 
         public void CreateCategory(string name)

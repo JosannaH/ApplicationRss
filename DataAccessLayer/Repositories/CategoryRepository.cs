@@ -9,12 +9,12 @@ namespace DataAccess
 {
     public class CategoryRepository : IRepository<Category>
     {
-        SerializerForXml SerializerForXml;
+        SerializerForXml SerializerForXml = new SerializerForXml();
         public List<Category> ListOfCategories { get; set; }    
 
         public CategoryRepository()
         {
-            SerializerForXml = new SerializerForXml();
+            //SerializerForXml = new SerializerForXml();
         }
         public void Create(Category category)
         {

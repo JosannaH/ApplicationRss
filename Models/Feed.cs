@@ -12,9 +12,7 @@ namespace Models
     public class Feed : Entity
     {
         public string Url { get; set; }
-
         public string Category { get; set; }
-
         public List<Episode> ListOfEpisodes { get; set; }
         public int NumberOfEpisodes => ListOfEpisodes.Count();
 

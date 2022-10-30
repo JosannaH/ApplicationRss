@@ -10,12 +10,12 @@ namespace DataAccess
 {
     public class FeedRepository : IRepository<Feed>
     {
-        SerializerForXml SerializerForXml;
+        SerializerForXml SerializerForXml = new SerializerForXml();
         public List<Feed> ListOfFeeds { get; set; }    
 
         public FeedRepository()
         {
-            SerializerForXml = new SerializerForXml();
+            //SerializerForXml = new SerializerForXml();
         }
         public void Create(Feed feed)
         {

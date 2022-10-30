@@ -17,7 +17,8 @@ namespace BusinessLogic.Controllers
         List<Episode> ListOfEpisodes = new List<Episode>();
         public EpisodeController()
         {
-
+            //FeedController = new FeedController();
+            //ListOfEpisodes = new List<Episode>();
         }
 
         public List<Episode> CreateListOfEpisodes(string url)
