@@ -7,8 +7,8 @@ namespace DataAccess
 {
     public class FeedRepository : IRepository<Feed>
     {
+        public List<Feed> ListOfFeeds { get; set; }
         SerializerForXml SerializerForXml;
-        public List<Feed> ListOfFeeds { get; set; }    
 
         public FeedRepository()
         {

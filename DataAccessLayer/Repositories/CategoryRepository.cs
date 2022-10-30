@@ -10,7 +10,7 @@ namespace DataAccess
 {
     public class CategoryRepository : IRepository<Category>
     {
-        SerializerForXml SerializerForXml;
+        private SerializerForXml SerializerForXml;
         public List<Category> ListOfCategories { get; set; }    
 
         public CategoryRepository()

@@ -9,10 +9,11 @@ namespace DataAccess
 {
     public class SerializerForXml
     {
-        public SerializerForXml()
-        {
+        
+       //public SerializerForXml()
+       // {
 
-        }
+       // }
         public void SerializeFeed(List<Feed> listOfFeeds)
         {
             try

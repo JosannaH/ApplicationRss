@@ -14,19 +14,17 @@ namespace BusinessLogic.Controllers
 {
     public class FeedController
     {
-        FeedRepository FeedRepository = new FeedRepository();
-        EpisodeController EpisodeController = new EpisodeController();
+        private FeedRepository FeedRepository;
 
         public FeedController()
         {
-            //FeedRepository = new FeedRepository();
-            //EpisodeController = new EpisodeController();
+            FeedRepository = new FeedRepository();
         }
 
         public void CreateFeed(string name, string url, string category)
         {
             Feed feed = new Feed(name, url, category);
-            feed.ListOfEpisodes = EpisodeController.CreateListOfEpisodes(url);
+            feed.ListOfEpisodes = CreateListOfEpisodes(url);
             FeedRepository.Create(feed);
         }
 
@@ -142,6 +140,31 @@ namespace BusinessLogic.Controllers
         public bool FileOfFeedsExists()
         {
             return FeedRepository.CheckForFile();
+        }
+
+        public List<Episode> CreateListOfEpisodes(string url)
+        {
+            List<Episode> listOfEpisodes = new List<Episode>();
+
+            XmlReader xmlReader = XmlReader.Create(url);
+            SyndicationFeed syndicationFeed = SyndicationFeed.Load(xmlReader);
+
+            foreach (var item in syndicationFeed.Items)
+            {
+                Episode episode = new Episode(item.Title.Text, item.Summary.Text);
+
+                listOfEpisodes.Add(episode);
+            }
+            return listOfEpisodes;
+        }
+
+        public string GetDescriptionForEpisode(string feedName, string episodeName)
+        {
+            Feed feed = GetFeedByName(feedName);
+            List<Episode> chosenEpisode = feed.ListOfEpisodes.Where(x => x.Name.Equals(episodeName)).ToList();
+            string description = chosenEpisode[0].Description;
+
+            return description;
         }
     }
 }

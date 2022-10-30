@@ -48,20 +48,20 @@ namespace ApplicationRss
             EpisodeController = new EpisodeController();
             CategoryController = new CategoryController();
 
-            if(FeedController.FileOfFeedsExists())
-            {
+            //if(FeedController.FileOfFeedsExists())
+            //{
                 ListOfFeeds = FeedController.ReadListOfFeedsFromFile();
                 // Read xml data from url
                 FeedController.UpdateEpisodesForAllFeeds(ListOfFeeds);
                 UpdateListOfFeeds();
                 ShowFeedsInListView();
-            }
-            if (CategoryController.FileOfFeedsExists())
-            {
+            //}
+            //if (CategoryController.FileOfFeedsExists())
+            //{
                 ListOfCategories = CategoryController.ReadListOfCategoriesFromFile();
                 ShowCategoriesInListView();
                 ShowCategoriesInComboboxes();
-            }
+            //}
 
             
             
@@ -258,7 +258,7 @@ namespace ApplicationRss
 
         private void ShowEpisodeDescriptionInTextBox(string nameOfChosenEpisode)
         {
-            string description = EpisodeController.GetDescriptionForEpisode(NameOfChosenFeed, nameOfChosenEpisode);
+            string description = FeedController.GetDescriptionForEpisode(NameOfChosenFeed, nameOfChosenEpisode);
             tbEpisodeSummary.Text = description;
         }
 
