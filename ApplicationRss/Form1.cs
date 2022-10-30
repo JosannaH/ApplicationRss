@@ -64,13 +64,6 @@ namespace ApplicationRss
                 ShowCategoriesInComboboxes();
             }
 
-            
-            
-
-            
-            
-
-
             //// For testing
             //Feed feed = new Feed("IMY", "https://www.imy.se/nyheter/rss/", "News");
             //feed.ListOfEpisodes = CreateListOfEpisodes("https://www.imy.se/nyheter/rss/", feed);
@@ -98,6 +91,8 @@ namespace ApplicationRss
             {
                 FeedController.UpdateFeed(NameOfChosenFeed, name, url, category);
                 btnSaveFeed.Text = "Save feed";
+
+                NameOfChosenFeed = name;
             }
 
             UpdateListOfFeeds();

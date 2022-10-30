@@ -38,11 +38,17 @@ namespace BusinessLogic.Controllers
         }
 
         public void UpdateFeed(string chosenFeed, string newName, string newUrl, string newCategory)
-        {
+        {          
             List<Feed> feedToEdit = FeedRepository.ListOfFeeds.Where(x => x.Name.Equals(chosenFeed)).ToList();
-            feedToEdit[0].Name = newName;
-            feedToEdit[0].Url = newUrl;
-            feedToEdit[0].Category = newCategory;
+            Feed feed = feedToEdit[0];
+            if (feed.Url != newUrl)
+            {
+                feed.ListOfEpisodes = CreateListOfEpisodes(newUrl);
+            }
+            feed.Name = newName;
+            feed.Url = newUrl;
+            feed.Category = newCategory;
+
             FeedRepository.Update();
         }
 
