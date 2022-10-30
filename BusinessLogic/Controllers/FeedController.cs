@@ -9,12 +9,16 @@ using System.Security.Policy;
 using System.Xml.Linq;
 using System.ServiceModel.Syndication;
 using System.Xml;
+using System.Xml.Serialization;
+using System.Collections;
 
 namespace BusinessLogic.Controllers
 {
+    //[Serializable]
+    //[XmlInclude(typeof(FeedController))]
     public class FeedController
     {
-        private FeedRepository FeedRepository;
+         FeedRepository FeedRepository;
 
         public FeedController()
         {
@@ -77,9 +81,8 @@ namespace BusinessLogic.Controllers
             // TODO: XmlException 
             XmlReader xmlReader = XmlReader.Create(feed.Url);
             SyndicationFeed syndicationFeed = SyndicationFeed.Load(xmlReader);
-            bool isNew = true;
 
-            List<Episode> ListOfNewEpisodes = new List<Episode>();
+            List<Episode> listOfNewEpisodes = new List<Episode>();
 
             // Loop through list of fetched episodes 
             foreach (var item in syndicationFeed.Items)
@@ -87,22 +90,26 @@ namespace BusinessLogic.Controllers
                 string episodeName = item.Title.Text;
 
                 // Check if episode is already saved
-                List<Episode> fetchedEpisode = feed.ListOfEpisodes.Where(x => x.Name.Equals(episodeName)).ToList();
-                if (fetchedEpisode.Count > 0) 
-                {
-                    isNew = false;
-                }
-
-                if (isNew)
+                List<Episode> duplicateEpisode = feed.ListOfEpisodes.Where(x => x.Name.Equals(episodeName)).ToList();
+               
+                if ((duplicateEpisode != null) && (!duplicateEpisode.Any())) // if not already saved
                 {
                     Episode episode = new Episode(item.Title.Text, item.Summary.Text);
-                    ListOfNewEpisodes.Add(episode);
+                    listOfNewEpisodes.Add(episode);
                 }
-            }
-            // The new episodes will be first in the list
-            List<Episode> UpdatedListOfEpisodes = (List<Episode>)ListOfNewEpisodes.Concat(feed.ListOfEpisodes);
             
-            return UpdatedListOfEpisodes;
+            }
+            List<Episode> updatedListOfEpisodes = new List<Episode>();
+
+            // The new episodes will be first in the list
+            if ((updatedListOfEpisodes != null) && (!updatedListOfEpisodes.Any()))
+            {
+
+                updatedListOfEpisodes = listOfNewEpisodes.Concat(feed.ListOfEpisodes).ToList();
+            }
+            //List<Episode> UpdatedListOfEpisodes = listOfNewEpisodes.AddRange(feed.ListOfEpisodes);
+            
+            return updatedListOfEpisodes;
         }
 
         public void UpdateEpisodesForAllFeeds(List<Feed> listOfFeeds)
@@ -123,6 +130,8 @@ namespace BusinessLogic.Controllers
             {
                 feed.Category = newCategory;
             }
+            FeedRepository.Update();
+            FeedRepository.Read();
         }
 
         public void DeleteFeedsWithCategory(string category)

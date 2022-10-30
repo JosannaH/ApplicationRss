@@ -8,8 +8,8 @@ using System.Xml.Serialization;
 namespace Models
 {
 
-    [Serializable]
-    [XmlInclude(typeof(Entity))]
+    //[Serializable]
+    //[XmlInclude(typeof(Entity))]
     public abstract class Entity
     {
         public string Name { get; set; }

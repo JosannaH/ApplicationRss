@@ -24,12 +24,11 @@ using BusinessLogic.Controllers;
 
 namespace ApplicationRss
 {
-    [Serializable]
-    [XmlInclude(typeof(Form1))]
+    //[Serializable]
+    //[XmlInclude(typeof(Form1))]
     public partial class Form1 : Form
     {
         FeedController FeedController;
-        EpisodeController EpisodeController;
         CategoryController CategoryController;
 
         List<Feed> ListOfFeeds;
@@ -45,23 +44,25 @@ namespace ApplicationRss
             InitializeComponent();
 
             FeedController = new FeedController();
-            EpisodeController = new EpisodeController();
             CategoryController = new CategoryController();
+            ListOfFeeds = new List<Feed>();
+            ListOfCategories = new List<Category>();
+            ListOfEpisodes = new List<Episode>();
 
-            //if(FeedController.FileOfFeedsExists())
-            //{
+            if(FeedController.FileOfFeedsExists())
+            {
                 ListOfFeeds = FeedController.ReadListOfFeedsFromFile();
                 // Read xml data from url
                 FeedController.UpdateEpisodesForAllFeeds(ListOfFeeds);
                 UpdateListOfFeeds();
                 ShowFeedsInListView();
-            //}
-            //if (CategoryController.FileOfFeedsExists())
-            //{
+            }
+            if (CategoryController.FileOfFeedsExists())
+            {
                 ListOfCategories = CategoryController.ReadListOfCategoriesFromFile();
                 ShowCategoriesInListView();
                 ShowCategoriesInComboboxes();
-            //}
+            }
 
             
             
@@ -86,15 +87,16 @@ namespace ApplicationRss
             string url = tbUrl.Text;
             string name = tbFeedName.Text;
             string category = cbCategory.SelectedItem.ToString();
+            
 
             if (btnSaveFeed.Text.Equals("Save feed"))
             {
+                NameOfChosenFeed = name;
                 FeedController.CreateFeed(name, url, category);   
             }
             else if (btnSaveFeed.Text.Equals("Save changes"))
             {
-                string chosenFeed = lvFeeds.SelectedItems[0].Text;
-                FeedController.UpdateFeed(chosenFeed, name, url, category);
+                FeedController.UpdateFeed(NameOfChosenFeed, name, url, category);
                 btnSaveFeed.Text = "Save feed";
             }
 
@@ -116,9 +118,9 @@ namespace ApplicationRss
         {
             btnSaveFeed.Text = "Save changes";
 
-            string chosenFeed = lvFeeds.SelectedItems[0].Text;
+            NameOfChosenFeed = lvFeeds.SelectedItems[0].Text;
 
-            List<Feed> feedToEdit = ListOfFeeds.Where(x => x.Name.Equals(chosenFeed)).ToList();
+            List<Feed> feedToEdit = ListOfFeeds.Where(x => x.Name.Equals(NameOfChosenFeed)).ToList();
 
             // Fill boxes with current feed information
             tbFeedName.Text = feedToEdit[0].Name;
@@ -131,10 +133,12 @@ namespace ApplicationRss
             string feedName = lvFeeds.SelectedItems[0].Text;
             FeedController.DeleteFeed(feedName);
 
+            UpdateListOfFeeds();
             ShowFeedsInListView();
            
             lvEpisodes.Items.Clear();
             lvEpisodes.Columns[0].Text = "";
+            tbEpisodeSummary.Clear();
         }
 
         private void btnSaveCategory_Click(object sender, EventArgs e)
@@ -154,6 +158,7 @@ namespace ApplicationRss
 
                 CategoryController.UpdateCategory(oldCategoryName, newCategoryName);
                 UpdateListOfCategories();
+                FeedController.UpdateCategoryForFeeds(oldCategoryName, newCategoryName);
                 UpdateListOfFeeds();
                 ShowFeedsInListView();
                 btnSaveCategory.Text = "Save category";
@@ -187,11 +192,11 @@ namespace ApplicationRss
         private void lvFeeds_OnItemClick(object sender, EventArgs e)
         {
             NameOfChosenFeed = lvFeeds.SelectedItems[0].Text;
+            ListOfEpisodes = FeedController.GetListOfEpisodesForFeed(NameOfChosenFeed);
+            ShowEpisodesInListView();
 
             // Change text on Episode listview header, to the name if chosen feed
             lvEpisodes.Columns[0].Text = NameOfChosenFeed;
-           
-            ShowEpisodesInListView(); 
         }
 
         private void cbSortByCategory_SelectedIndexChanged(object sender, EventArgs e)

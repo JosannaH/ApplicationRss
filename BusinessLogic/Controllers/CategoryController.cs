@@ -4,19 +4,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Models;
-
+using System.Xml.Serialization;
 
 namespace BusinessLogic.Controllers
 {
-    
+    //[Serializable]
+    //[XmlInclude(typeof(CategoryController))]
     public class CategoryController
     {
-        private CategoryRepository CategoryRepository = new CategoryRepository();
-        private FeedController FeedController = new FeedController();
+        CategoryRepository CategoryRepository;
+        FeedController FeedController = new FeedController();
         public CategoryController()
         {
-            //CategoryRepository = new CategoryRepository();
-            //FeedController = new FeedController();
+            CategoryRepository = new CategoryRepository();
+            FeedController = new FeedController();
         }
 
         public void CreateCategory(string name)
@@ -35,7 +36,7 @@ namespace BusinessLogic.Controllers
             List<Category> categoryToChange = CategoryRepository.ListOfCategories.Where(x => x.Name.Equals(oldName)).ToList();
             categoryToChange[0].Name = newName;
             CategoryRepository.Update();
-            FeedController.UpdateCategoryForFeeds(oldName, newName);
+            
         }
 
         public void DeleteCategory(string category)

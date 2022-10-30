@@ -5,9 +5,12 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace DataAccess
 {
+   // [Serializable]
+   // [XmlInclude(typeof(CategoryRepository))]
     public class CategoryRepository : IRepository<Category>
     {
         private SerializerForXml SerializerForXml;
