@@ -1,4 +1,5 @@
-﻿using Models;
+﻿using DataAccess;
+using Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,10 +13,11 @@ namespace BusinessLogic.Controllers
 {
     public class EpisodeController
     {
-        List<Episode> ListOfEpisodes;
+        FeedController FeedController = new FeedController();
+        List<Episode> ListOfEpisodes = new List<Episode>();
         public EpisodeController()
         {
-            ListOfEpisodes = new List<Episode>();
+
         }
 
         public List<Episode> CreateListOfEpisodes(string url)
@@ -29,6 +31,15 @@ namespace BusinessLogic.Controllers
                 ListOfEpisodes.Add(episode);
             }
             return ListOfEpisodes;
+        }
+
+        public string GetDescriptionForEpisode(string feedName, string episodeName)
+        {
+            Feed feed = FeedController.GetFeedByName(feedName);
+            List<Episode> chosenEpisode = feed.ListOfEpisodes.Where(x => x.Name.Equals(episodeName)).ToList();
+            string description = chosenEpisode[0].Description;
+
+            return description;
         }
                
     }

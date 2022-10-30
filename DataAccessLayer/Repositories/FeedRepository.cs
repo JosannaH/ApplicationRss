@@ -16,7 +16,6 @@ namespace DataAccess
         public FeedRepository()
         {
             SerializerForXml = new SerializerForXml();
-           
         }
         public void Create(Feed feed)
         {

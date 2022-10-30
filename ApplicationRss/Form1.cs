@@ -30,22 +30,38 @@ namespace ApplicationRss
     {
         FeedController FeedController;
         EpisodeController EpisodeController;
+        CategoryController CategoryController;
+
+        List<Feed> ListOfFeeds;
+        List<Category> ListOfCategories;
+        List<Episode> ListOfEpisodes;
+        string NameOfChosenFeed = "";
+
+        // List<Feed> ListOfFeeds = new List<Feed>();
+        // List<Category> ListOfCategories = new List<Category>(); //{ new Category("News"), new Category("Fashion") };
+        // SerializerForXml serializerForXml = new SerializerForXml();
 
 
-       // List<Feed> ListOfFeeds = new List<Feed>();
-       // List<Category> ListOfCategories = new List<Category>(); //{ new Category("News"), new Category("Fashion") };
-       // SerializerForXml serializerForXml = new SerializerForXml();
 
-
-        
 
         public Form1()
         {
             InitializeComponent();
+
             FeedController = new FeedController();
             EpisodeController = new EpisodeController();
+            CategoryController = new CategoryController();
 
-            FeedController.ReadListOfFeedsFromFile();
+            ListOfFeeds = FeedController.ReadListOfFeedsFromFile();
+            ListOfCategories = CategoryController.ReadListOfCategoriesFromFile();
+
+            // Read xml data from url
+            FeedController.UpdateEpisodesForAllFeeds(ListOfFeeds);
+
+            UpdateListOfFeeds();
+            ShowFeedsInListView();
+            ShowCategoriesInListView();
+            ShowCategoriesInComboboxes();
 
 
             //// For testing
@@ -54,17 +70,6 @@ namespace ApplicationRss
             //ListOfFeeds.Add(feed);
             //serializerForXml.SerializeFeed(ListOfFeeds);
             //ShowEpisodesInListView(GetListOfEpisodesForChosenFeed("IMY"));
-
-
-
-
-
-            ListOfCategories = serializerForXml.DeserializeCategory();
-
-            UpdateEpisodesForAllFeeds(ListOfFeeds);
-            ShowFeedsInListView(ListOfFeeds);
-            ShowCategoriesInListView(ListOfCategories);
-            ShowCategoriesInComboboxes(ListOfCategories, cbCategory, cbSortByCategory);
         }
 
         private void btnSaveFeed_Click(object sender, EventArgs e)
@@ -87,9 +92,12 @@ namespace ApplicationRss
                 btnSaveFeed.Text = "Save feed";
             }
 
-            ShowEpisodesInListView(FeedController.GetListOfEpisodesForFeed(name));
-            ShowFeedsInListView(FeedController.GetListOfAllFeeds());
+            UpdateListOfFeeds();
+            ShowFeedsInListView();
 
+            UpdateListOfEpisodes(name);
+            ShowEpisodesInListView();
+            
             // Set name of feed as column header in Episodes listview
             lvEpisodes.Columns[0].Text = name;
 
@@ -104,7 +112,7 @@ namespace ApplicationRss
 
             string chosenFeed = lvFeeds.SelectedItems[0].Text;
 
-            List<Feed> feedToEdit = FeedController.GetListOfAllFeeds().Where(x => x.Name.Equals(chosenFeed)).ToList();
+            List<Feed> feedToEdit = ListOfFeeds.Where(x => x.Name.Equals(chosenFeed)).ToList();
 
             // Fill boxes with current feed information
             tbFeedName.Text = feedToEdit[0].Name;
@@ -117,7 +125,7 @@ namespace ApplicationRss
             string feedName = lvFeeds.SelectedItems[0].Text;
             FeedController.DeleteFeed(feedName);
 
-            ShowFeedsInListView(FeedController.GetListOfAllFeeds());
+            ShowFeedsInListView();
            
             lvEpisodes.Items.Clear();
             lvEpisodes.Columns[0].Text = "";
@@ -130,27 +138,23 @@ namespace ApplicationRss
             if (btnSaveCategory.Text.Equals("Save category"))
             {
                 string categoryName = tbNewCategoryName.Text;
-                Category category = new Category(categoryName);
-                ListOfCategories.Add(category);
-          
+                CategoryController.CreateCategory(categoryName);
+                UpdateListOfCategories();          
             }
             else if(btnSaveCategory.Text.Equals("Save changes"))
             {
                 string newCategoryName = tbNewCategoryName.Text;
                 string oldCategoryName = lvCategories.SelectedItems[0].Text;
 
-                List<Category> categoryToChange = ListOfCategories.Where(x => x.Name.Equals(oldCategoryName)).ToList();
-                categoryToChange[0].Name = newCategoryName;
-
+                CategoryController.UpdateCategory(oldCategoryName, newCategoryName);
+                UpdateListOfCategories();
+                UpdateListOfFeeds();
+                ShowFeedsInListView();
                 btnSaveCategory.Text = "Save category";
-                UpdateCategoryNameForFeeds(oldCategoryName, newCategoryName, ListOfFeeds);
-                ShowFeedsInListView(ListOfFeeds);
             }
-            serializerForXml.SerializeCategory(ListOfCategories);
 
-            ShowCategoriesInListView(ListOfCategories);
-
-            ShowCategoriesInComboboxes(ListOfCategories, cbCategory, cbSortByCategory);
+            ShowCategoriesInListView();
+            ShowCategoriesInComboboxes();
             tbNewCategoryName.Clear();
         }
 
@@ -163,136 +167,15 @@ namespace ApplicationRss
 
         private void btnDeleteCategory_Click(object sender, EventArgs e)
         {
-            string categoryName = lvCategories.SelectedItems[0].Text;
+            string category = lvCategories.SelectedItems[0].Text;
 
-            ListOfCategories = ListOfCategories.Where(x => x.Name != categoryName).ToList();    
-
-            ListOfFeeds = ListOfFeeds.Where(x => x.Category != categoryName).ToList();
-  
-            serializerForXml.SerializeFeed(ListOfFeeds);
-            serializerForXml.SerializeCategory(ListOfCategories);
-            ShowCategoriesInComboboxes(ListOfCategories, cbCategory, cbSortByCategory);
-            ShowCategoriesInListView(ListOfCategories);
-            ShowFeedsInListView(ListOfFeeds);
+            CategoryController.DeleteCategory(category);
+            UpdateListOfCategories();
+            ShowCategoriesInComboboxes();
+            ShowCategoriesInListView();
+            ShowFeedsInListView();
           
             // TODO: Warning to user
-        }
-
-        private void ShowFeedsInListView(List<Feed> listOfFeeds)
-        {
-            lvFeeds.Items.Clear();
-            foreach(Feed feed in listOfFeeds)
-            {
-                ListViewItem row = new ListViewItem(feed.Name);
-                row.SubItems.Add(feed.NumberOfEpisodes.ToString());
-                row.SubItems.Add(feed.Category);
-                row.Font = new Font(row.Font, FontStyle.Regular);
-
-                lvFeeds.Items.Add(row);
-            }
-        }
-
-        private void ShowEpisodesInListView(List<Episode> listOfEpisodes)
-        {
-            lvEpisodes.Items.Clear();
-            foreach (Episode episode in listOfEpisodes)
-            {
-                ListViewItem row = new ListViewItem(episode.Name);
-                row.Font = new Font(row.Font, FontStyle.Regular);
-
-                lvEpisodes.Items.Add(row);
-            }
-        }
-
-        private void ShowCategoriesInListView(List<Category> listOfCategories)
-        {
-            lvCategories.Items.Clear();
-            foreach(Category category in listOfCategories)
-            {
-                ListViewItem row = new ListViewItem(category.Name);
-                row.Font = new Font(row.Font, FontStyle.Regular);
-
-                lvCategories.Items.Add(row);
-            }
-        }
-
-        private void ShowCategoriesInComboboxes(List<Category> listOfCategories, System.Windows.Forms.ComboBox comboBox1, System.Windows.Forms.ComboBox comboBox2)
-        {
-            comboBox1.Items.Clear();
-            comboBox2.Items.Clear();
-
-            foreach(Category category in listOfCategories)
-            {
-                comboBox1.Items.Add(category.Name);
-                comboBox2.Items.Add(category.Name);
-            }
-            
-        }
-
-        private List<Episode> CreateListOfEpisodes(string url, Feed feed)
-        {
-            List<Episode> listOfEpisodes = new List<Episode>();
-            // TODO: XmlException 
-            XmlReader xmlReader = XmlReader.Create(url);
-            SyndicationFeed syndicationFeed = SyndicationFeed.Load(xmlReader);
-            foreach (var item in syndicationFeed.Items)
-            {
-                Episode episode = new Episode();
-                episode.Name = item.Title.Text;
-                episode.Description = item.Summary.Text;
-                listOfEpisodes.Add(episode);
-            }
-            return listOfEpisodes;
-        }
-
-        private void UpdateEpisodesForAllFeeds(List<Feed> listOfFeeds)
-        {
-            foreach(Feed feed in listOfFeeds)
-            {
-                feed.ListOfEpisodes = UpdateEpisodesForOneFeed(feed.Url, feed);
-            }
-        }
-
-        private List<Episode> UpdateEpisodesForOneFeed(string url, Feed feed)
-        { 
-            // TODO: XmlException 
-            XmlReader xmlReader = XmlReader.Create(url);
-            SyndicationFeed syndicationFeed = SyndicationFeed.Load(xmlReader);
-            Boolean isNew = true;
-
-            List<Episode> updatedListOfEpisodes = new List<Episode>();
-
-            foreach (var item in syndicationFeed.Items)
-            {
-                string fetchedEpisode = item.Title.Text;
-
-                List<Episode> listOfEpisodes = feed.ListOfEpisodes.Where(x => x.Name.Equals(fetchedEpisode)).ToList();
-                if(listOfEpisodes.Count > 0)
-                {
-                    isNew = false;
-                }
-
-                if (isNew) {
-                    Episode episode = new Episode();
-                    episode.Name = item.Title.Text;
-                    episode.Description = item.Summary.Text;
-
-                    updatedListOfEpisodes.Add(episode);
-                }
-            }
-            // The new episodes will be first in the list
-            updatedListOfEpisodes.AddRange(feed.ListOfEpisodes);
-            return updatedListOfEpisodes;
-        }
-
-        private void UpdateCategoryNameForFeeds(string oldCategoryName, string newCategoryName, List<Feed> listOfFeeds)
-        {
-            List<Feed> feedsWithCategory = listOfFeeds.Where(x => x.Category.Equals(oldCategoryName)).ToList();
-
-            foreach (Feed feed in feedsWithCategory)
-            {
-                    feed.Category = newCategoryName;
-            }
         }
 
         private void lvFeeds_OnItemClick(object sender, EventArgs e)
@@ -302,40 +185,105 @@ namespace ApplicationRss
             // Change text on Episode listview header, to the name if chosen feed
             lvEpisodes.Columns[0].Text = NameOfChosenFeed;
            
-            ShowEpisodesInListView(GetListOfEpisodesForChosenFeed(NameOfChosenFeed)); 
+            ShowEpisodesInListView(); 
         }
-
-
 
         private void cbSortByCategory_SelectedIndexChanged(object sender, EventArgs e)
         {
             string category = cbSortByCategory.SelectedItem.ToString();
-           
-            ShowFeedsInListView(SortFeedsByCategory(ListOfFeeds, category));
-        }
-
-        private List<Feed> SortFeedsByCategory(List<Feed> listOfFeeds, string category)
-        {
-            listOfFeeds = listOfFeeds.Where(x => x.Category.Equals(category)).ToList();
-            return listOfFeeds;
+            ShowFeedsInListViewByCategory(category);
         }
 
         private void lvEpisodes_OnItemClick(object sender, EventArgs e)
         {
             string nameOfChosenEpisode = lvEpisodes.SelectedItems[0].Text;
-            ShowEpisodeDescriptionInTextBox(NameOfChosenFeed, nameOfChosenEpisode);
-  
-    
-        
+            ShowEpisodeDescriptionInTextBox(nameOfChosenEpisode);
         }
 
-        private void ShowEpisodeDescriptionInTextBox(string nameOfChosenFeed, string nameOfChosenEpisode)
+        private void ShowFeedsInListView()
         {
-            List<Feed> chosenFeed = ListOfFeeds.Where(x => x.Name.Equals(nameOfChosenFeed)).ToList();
-            List<Episode> chosenEpisode = chosenFeed[0].ListOfEpisodes.Where(x => x.Name.Equals(nameOfChosenEpisode)).ToList();
+            lvFeeds.Items.Clear();
 
-            tbEpisodeSummary.Text = chosenEpisode[0].Description;
+            foreach (Feed feed in ListOfFeeds)
+            {
+                ListViewItem row = new ListViewItem(feed.Name);
+                row.SubItems.Add(feed.NumberOfEpisodes.ToString());
+                row.SubItems.Add(feed.Category);
+                row.Font = new Font(row.Font, FontStyle.Regular);
+                lvFeeds.Items.Add(row);
+            }
         }
 
+        private void ShowEpisodesInListView()
+        {
+            lvEpisodes.Items.Clear();
+
+            foreach (Episode episode in ListOfEpisodes)
+            {
+                ListViewItem row = new ListViewItem(episode.Name);
+                row.Font = new Font(row.Font, FontStyle.Regular);
+                lvEpisodes.Items.Add(row);
+            }
+        }
+
+        private void ShowCategoriesInListView()
+        {
+            lvCategories.Items.Clear();
+            foreach (Category category in ListOfCategories)
+            {
+                ListViewItem row = new ListViewItem(category.Name);
+                row.Font = new Font(row.Font, FontStyle.Regular);
+
+                lvCategories.Items.Add(row);
+            }
+        }
+        private void ShowCategoriesInComboboxes()
+        {
+            cbCategory.Items.Clear();
+            cbSortByCategory.Items.Clear();
+
+            foreach (Category category in ListOfCategories)
+            {
+                cbCategory.Items.Add(category.Name);
+                cbSortByCategory.Items.Add(category.Name);
+            }
+        }
+
+        private void ShowEpisodeDescriptionInTextBox(string nameOfChosenEpisode)
+        {
+            string description = EpisodeController.GetDescriptionForEpisode(NameOfChosenFeed, nameOfChosenEpisode);
+            tbEpisodeSummary.Text = description;
+        }
+
+        private void ShowFeedsInListViewByCategory(string category)
+        {
+            lvFeeds.Items.Clear();
+
+            List<Feed> listOfSortedFeeds = FeedController.SortFeedsByCategory(category);
+
+            foreach (Feed feed in listOfSortedFeeds)
+            {
+                ListViewItem row = new ListViewItem(feed.Name);
+                row.SubItems.Add(feed.NumberOfEpisodes.ToString());
+                row.SubItems.Add(feed.Category);
+                row.Font = new Font(row.Font, FontStyle.Regular);
+                lvFeeds.Items.Add(row);
+            }
+        }
+
+        private void UpdateListOfFeeds()
+        {
+            ListOfFeeds = FeedController.GetListOfAllFeeds();
+        }
+
+        private void UpdateListOfCategories()
+        {
+            ListOfCategories = CategoryController.GetListOfCategories();
+        }
+
+        private void UpdateListOfEpisodes(string feedName)
+        {
+            ListOfEpisodes = FeedController.GetListOfEpisodesForFeed(feedName);
+        }
     }
 }

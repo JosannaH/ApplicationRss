@@ -1,4 +1,4 @@
-﻿using BusinessLogic;
+﻿using Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,26 +7,38 @@ using System.Threading.Tasks;
 
 namespace DataAccess
 {
-    internal class CategoryRepository : ICategoryRepository<Category>
+    public class CategoryRepository : IRepository<Category>
     {
-        public void Create(Category entity)
+        SerializerForXml SerializerForXml;
+        public List<Category> ListOfCategories { get; set; }    
+
+        public CategoryRepository()
         {
-            throw new NotImplementedException();
+            SerializerForXml = new SerializerForXml();
+        }
+        public void Create(Category category)
+        {
+            ListOfCategories.Add(category);
+            SerializerForXml.SerializeCategory(ListOfCategories);
+        }
+        public List<Category> Read()
+        {
+            ListOfCategories = SerializerForXml.DeserializeCategory();
+            return ListOfCategories;
+        }
+        public void Update()
+        {
+            SerializerForXml.SerializeCategory(ListOfCategories);
         }
 
-        public void Delete(Category category)
+        public void Delete(List<Category> listOfCategories)
         {
-            throw new NotImplementedException();
+            ListOfCategories = listOfCategories;
+            SerializerForXml.SerializeCategory(ListOfCategories);
         }
 
-        public List<Category> GetAll()
-        {
-            throw new NotImplementedException();
-        }
+       
 
-        public void Update(Category category)
-        {
-            throw new NotImplementedException();
-        }
+      
     }
 }
