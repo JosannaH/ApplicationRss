@@ -49,7 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\CategoryController.cs" />
-    <Compile Include="Controllers\EpisodeController.cs" />
+    <Compile Include="Controllers\EntityController.cs" />
     <Compile Include="Controllers\FeedController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

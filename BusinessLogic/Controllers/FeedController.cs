@@ -1,43 +1,37 @@
 ﻿using DataAccess;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Models;
-using System.Security.Policy;
-using System.Xml.Linq;
 using System.ServiceModel.Syndication;
 using System.Xml;
-using System.Xml.Serialization;
-using System.Collections;
 
 namespace BusinessLogic.Controllers
 {
-    //[Serializable]
-    //[XmlInclude(typeof(FeedController))]
-    public class FeedController
+    public class FeedController : EntityController<Feed>
     {
-         FeedRepository FeedRepository;
+         private FeedRepository FeedRepository;
 
         public FeedController()
         {
             FeedRepository = new FeedRepository();
         }
 
-        public void CreateFeed(string name, string url, string category)
+        override
+        public void Create(string name, string url, string category)
         {
             Feed feed = new Feed(name, url, category);
             feed.ListOfEpisodes = CreateListOfEpisodes(url);
             FeedRepository.Create(feed);
         }
 
-        public List<Feed> ReadListOfFeedsFromFile()
+        override
+        public List<Feed> ReadListFromFile()
         {
             return FeedRepository.Read();
         }
 
-        public void UpdateFeed(string chosenFeed, string newName, string newUrl, string newCategory)
+        override
+        public void Update(string chosenFeed, string newName, string newUrl, string newCategory)
         {          
             List<Feed> feedToEdit = FeedRepository.ListOfFeeds.Where(x => x.Name.Equals(chosenFeed)).ToList();
             Feed feed = feedToEdit[0];
@@ -52,7 +46,8 @@ namespace BusinessLogic.Controllers
             FeedRepository.Update();
         }
 
-        public void DeleteFeed(string feedToDelete)
+        override
+        public void Delete(string feedToDelete)
         {
             List<Feed> updatedList = FeedRepository.ListOfFeeds.Where(x => x.Name != feedToDelete).ToList();
             FeedRepository.Delete(updatedList);
@@ -152,7 +147,8 @@ namespace BusinessLogic.Controllers
             return ListOfSortedFeeds;
         }
 
-        public bool FileOfFeedsExists()
+        override
+        public bool FileExists()
         {
             return FeedRepository.CheckForFile();
         }

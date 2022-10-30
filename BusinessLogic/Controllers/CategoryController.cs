@@ -1,37 +1,35 @@
 ﻿using DataAccess;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Models;
-using System.Xml.Serialization;
 
 namespace BusinessLogic.Controllers
 {
-    //[Serializable]
-    //[XmlInclude(typeof(CategoryController))]
-    public class CategoryController
+    public class CategoryController : EntityController<Category>
     {
-        CategoryRepository CategoryRepository;
-        FeedController FeedController = new FeedController();
+        private CategoryRepository CategoryRepository;
+        private FeedController FeedController = new FeedController();
         public CategoryController()
         {
             CategoryRepository = new CategoryRepository();
             FeedController = new FeedController();
         }
 
-        public void CreateCategory(string name)
+        override
+        public void Create(string name)
         {
             Category category = new Category(name);
             CategoryRepository.Create(category);
         }
 
-        public List<Category> ReadListOfCategoriesFromFile()
+        override
+        public List<Category> ReadListFromFile()
         {
             return CategoryRepository.Read();
         }
 
-        public void UpdateCategory(string oldName, string newName)
+        override
+        public void Update(string oldName, string newName)
         {
             List<Category> categoryToChange = CategoryRepository.ListOfCategories.Where(x => x.Name.Equals(oldName)).ToList();
             categoryToChange[0].Name = newName;
@@ -39,7 +37,8 @@ namespace BusinessLogic.Controllers
             
         }
 
-        public void DeleteCategory(string category)
+        override
+        public void Delete(string category)
         {
             CategoryRepository.ListOfCategories = CategoryRepository.ListOfCategories.Where(x => x.Name != category).ToList();
             CategoryRepository.Update();
@@ -51,7 +50,8 @@ namespace BusinessLogic.Controllers
             return CategoryRepository.ListOfCategories;
         }
 
-        public bool FileOfFeedsExists()
+        override
+        public bool FileExists()
         {
             return CategoryRepository.CheckForFile();
         }

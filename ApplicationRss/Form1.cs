@@ -49,17 +49,17 @@ namespace ApplicationRss
             ListOfCategories = new List<Category>();
             ListOfEpisodes = new List<Episode>();
 
-            if(FeedController.FileOfFeedsExists())
+            if(FeedController.FileExists())
             {
-                ListOfFeeds = FeedController.ReadListOfFeedsFromFile();
+                ListOfFeeds = FeedController.ReadListFromFile();
                 // Read xml data from url
                 FeedController.UpdateEpisodesForAllFeeds(ListOfFeeds);
                 UpdateListOfFeeds();
                 ShowFeedsInListView();
             }
-            if (CategoryController.FileOfFeedsExists())
+            if (CategoryController.FileExists())
             {
-                ListOfCategories = CategoryController.ReadListOfCategoriesFromFile();
+                ListOfCategories = CategoryController.ReadListFromFile();
                 ShowCategoriesInListView();
                 ShowCategoriesInComboboxes();
             }
@@ -85,11 +85,11 @@ namespace ApplicationRss
             if (btnSaveFeed.Text.Equals("Save feed"))
             {
                 NameOfChosenFeed = name;
-                FeedController.CreateFeed(name, url, category);   
+                FeedController.Create(name, url, category);   
             }
             else if (btnSaveFeed.Text.Equals("Save changes"))
             {
-                FeedController.UpdateFeed(NameOfChosenFeed, name, url, category);
+                FeedController.Update(NameOfChosenFeed, name, url, category);
                 btnSaveFeed.Text = "Save feed";
 
                 NameOfChosenFeed = name;
@@ -126,7 +126,7 @@ namespace ApplicationRss
         private void btnDeleteFeed_Click(object sender, EventArgs e)
         {
             string feedName = lvFeeds.SelectedItems[0].Text;
-            FeedController.DeleteFeed(feedName);
+            FeedController.Delete(feedName);
 
             UpdateListOfFeeds();
             ShowFeedsInListView();
@@ -143,7 +143,7 @@ namespace ApplicationRss
             if (btnSaveCategory.Text.Equals("Save category"))
             {
                 string categoryName = tbNewCategoryName.Text;
-                CategoryController.CreateCategory(categoryName);
+                CategoryController.Create(categoryName);
                 UpdateListOfCategories();          
             }
             else if(btnSaveCategory.Text.Equals("Save changes"))
@@ -151,7 +151,7 @@ namespace ApplicationRss
                 string newCategoryName = tbNewCategoryName.Text;
                 string oldCategoryName = lvCategories.SelectedItems[0].Text;
 
-                CategoryController.UpdateCategory(oldCategoryName, newCategoryName);
+                CategoryController.Update(oldCategoryName, newCategoryName);
                 UpdateListOfCategories();
                 FeedController.UpdateCategoryForFeeds(oldCategoryName, newCategoryName);
                 UpdateListOfFeeds();
@@ -175,7 +175,7 @@ namespace ApplicationRss
         {
             string category = lvCategories.SelectedItems[0].Text;
 
-            CategoryController.DeleteCategory(category);
+            CategoryController.Delete(category);
             UpdateListOfCategories();
             ShowCategoriesInComboboxes();
             ShowCategoriesInListView();

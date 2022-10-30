@@ -6,9 +6,8 @@ namespace DataAccess
 {
     public class FeedRepository : IRepository<Feed>
     {
-        public List<Feed> ListOfFeeds;
-
         private SerializerForXml SerializerForXml;
+        public List<Feed> ListOfFeeds;
 
         public FeedRepository()
         {
@@ -35,7 +34,8 @@ namespace DataAccess
 
         public void Delete(List<Feed> listOfFeeds)
         {
-            UpdateListOfFeeds(listOfFeeds);
+            //UpdateListOfFeeds(listOfFeeds);
+            ListOfFeeds = listOfFeeds;
             Update();
         }
 
@@ -44,9 +44,9 @@ namespace DataAccess
             return File.Exists("Feeds.xml");
         }
 
-        public void UpdateListOfFeeds(List<Feed> listOfFeeds)
-        {
-            ListOfFeeds = listOfFeeds;
-        }
+        //public void UpdateListOfFeeds(List<Feed> listOfFeeds)
+        //{
+        //    ListOfFeeds = listOfFeeds;
+        //}
     }
 }
