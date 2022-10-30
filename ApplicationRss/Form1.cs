@@ -1,31 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml.Serialization;
-using BusinessLogic;
-using System.IO;
-using System.Xml;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using System.Security.Cryptography;
-using System.ServiceModel.Syndication;
-using System.Runtime.Remoting.Messaging;
-using System.Collections;
-using System.Web;
-using System.Security.Policy;
-using System.Xml.Linq;
 using Models;
 using BusinessLogic.Controllers;
 
 namespace ApplicationRss
 {
-    //[Serializable]
-    //[XmlInclude(typeof(Form1))]
     public partial class Form1 : Form
     {
         FeedController FeedController;
@@ -35,9 +18,6 @@ namespace ApplicationRss
         List<Category> ListOfCategories;
         List<Episode> ListOfEpisodes;
         string NameOfChosenFeed = "";
-
-        // List<Feed> ListOfFeeds = new List<Feed>();
-        // List<Category> ListOfCategories = new List<Category>(); //{ new Category("News"), new Category("Fashion") };
 
         public Form1()
         {
@@ -63,20 +43,10 @@ namespace ApplicationRss
                 ShowCategoriesInListView();
                 ShowCategoriesInComboboxes();
             }
-
-            //// For testing
-            //Feed feed = new Feed("IMY", "https://www.imy.se/nyheter/rss/", "News");
-            //feed.ListOfEpisodes = CreateListOfEpisodes("https://www.imy.se/nyheter/rss/", feed);
-            //ListOfFeeds.Add(feed);
-            //serializerForXml.SerializeFeed(ListOfFeeds);
-            //ShowEpisodesInListView(GetListOfEpisodesForChosenFeed("IMY"));
         }
 
         private void btnSaveFeed_Click(object sender, EventArgs e)
         {
-            // TODO: Look for duplicates in first URL and then name
-            // TODO: add validation / exceptions on input
-
             string url = tbUrl.Text;
             string name = tbFeedName.Text;
             string category = cbCategory.SelectedItem.ToString();

@@ -98,7 +98,6 @@ namespace BusinessLogic.Controllers
                     Episode episode = new Episode(item.Title.Text, item.Summary.Text);
                     listOfNewEpisodes.Add(episode);
                 }
-            
             }
             List<Episode> updatedListOfEpisodes = new List<Episode>();
 
@@ -107,9 +106,7 @@ namespace BusinessLogic.Controllers
             {
 
                 updatedListOfEpisodes = listOfNewEpisodes.Concat(feed.ListOfEpisodes).ToList();
-            }
-            //List<Episode> UpdatedListOfEpisodes = listOfNewEpisodes.AddRange(feed.ListOfEpisodes);
-            
+            }            
             return updatedListOfEpisodes;
         }
 
@@ -124,7 +121,6 @@ namespace BusinessLogic.Controllers
 
         public void UpdateCategoryForFeeds(string oldCategory, string newCategory)
         {
-
             List<Feed> feedsWithCategory = FeedRepository.ListOfFeeds.Where(x => x.Category.Equals(oldCategory)).ToList();
 
             foreach (Feed feed in feedsWithCategory)
