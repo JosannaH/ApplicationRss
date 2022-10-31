@@ -101,7 +101,6 @@ namespace BusinessLogic.Controllers
             {
                 throw new IndexOutOfRangeException("Can not find chosen feed.");
             }
-            
             return feed;
         }
 

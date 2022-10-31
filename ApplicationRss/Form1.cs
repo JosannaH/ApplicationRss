@@ -6,7 +6,6 @@ using System.Linq;
 using System.Windows.Forms;
 using Models;
 using BusinessLogic.Controllers;
-using System.Net.NetworkInformation;
 
 namespace ApplicationRss
 {
@@ -116,7 +115,6 @@ namespace ApplicationRss
         {
             bool success = false;
             
-
             if (btnSaveCategory.Text.Equals("Save category"))
             {
                 string categoryName = tbNewCategoryName.Text;
@@ -137,7 +135,6 @@ namespace ApplicationRss
                 UpdateListOfFeeds();
                 ShowFeedsInListView();
                 btnSaveCategory.Text = "Save category";
-
             }
             if (success)
             {

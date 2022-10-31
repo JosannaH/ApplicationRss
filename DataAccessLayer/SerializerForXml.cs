@@ -9,7 +9,6 @@ namespace DataAccess
 {
     public class SerializerForXml
     {
-        
        public SerializerForXml()
         {
 
@@ -25,7 +24,7 @@ namespace DataAccess
                     xmlSerializer.Serialize(fileStream, listOfFeeds);
                 }
             }
-            catch(Exception e)
+            catch(Exception)
             {
                 throw new Exception("Feeds.xml could not be serialized");
             }
@@ -42,7 +41,7 @@ namespace DataAccess
                     return (List<Feed>)xmlSerializer.Deserialize(fileStream);
                 }
             }
-            catch(Exception e)
+            catch(Exception)
             {
                 throw new Exception("Feeds.xml could not be deserialized");
             }
@@ -59,7 +58,7 @@ namespace DataAccess
                     xmlSerializer.Serialize(fileStream, listOfCategories);
                 }
             }
-            catch(Exception e)
+            catch(Exception)
             {
                 throw new Exception("Categories.xml could not be serialized");
             }  
@@ -76,7 +75,7 @@ namespace DataAccess
                     return (List<Category>)xmlSerializer.Deserialize(fileStream);
                 }
             }
-            catch
+            catch(Exception)
             {
                 throw new Exception("Categories.xml could not be deserialized");
             }
