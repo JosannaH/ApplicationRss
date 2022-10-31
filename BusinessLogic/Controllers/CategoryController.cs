@@ -47,17 +47,20 @@ namespace BusinessLogic.Controllers
         {
             bool success = false;
             List<Category> listOfCategories = CategoryRepository.ListOfCategories;
-            if(Validator.IsUniqueName(newName, listOfCategories))
+            List<Category> categoryToEdit = listOfCategories.Where(x => x.Name.Equals(oldName)).ToList();
+            Category category;
+            try
             {
-                List<Category> categoryToChange = listOfCategories.Where(x => x.Name.Equals(oldName)).ToList();
-                try
-                {
-                    categoryToChange[0].Name = newName;
-                }
-                catch (IndexOutOfRangeException)
-                {
-                    throw new IndexOutOfRangeException("Can not find chosen category.");
-                }
+                category = categoryToEdit[0];
+            }
+            catch (IndexOutOfRangeException)
+            {
+                throw new IndexOutOfRangeException("Could not find category to update");
+            }
+
+            if (Validator.HasValue(newName) && Validator.IsUniqueName(newName, listOfCategories))
+            {
+                category.Name = newName;
                 CategoryRepository.Update();
                 success = true;
             }

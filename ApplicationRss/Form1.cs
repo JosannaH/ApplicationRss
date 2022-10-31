@@ -125,26 +125,26 @@ namespace ApplicationRss
                 {
                     UpdateListOfCategories();
                 }
-                          
             }
             else if(btnSaveCategory.Text.Equals("Save changes"))
             {
                 string newCategoryName = tbNewCategoryName.Text;
                 string oldCategoryName = lvCategories.SelectedItems[0].Text;
 
-                CategoryController.Update(oldCategoryName, newCategoryName);
+                success = CategoryController.Update(oldCategoryName, newCategoryName);
                 UpdateListOfCategories();
                 FeedController.UpdateCategoryForFeeds(oldCategoryName, newCategoryName);
                 UpdateListOfFeeds();
                 ShowFeedsInListView();
                 btnSaveCategory.Text = "Save category";
+
             }
             if (success)
             {
                 ShowCategoriesInListView();
                 ShowCategoriesInComboboxes();
-                tbNewCategoryName.Clear();
             }
+            tbNewCategoryName.Clear();
         }
 
         private void btnEditCategory_Click(object sender, EventArgs e)
