@@ -96,7 +96,7 @@ namespace BusinessLogic
         public bool IsUniqueName(string name, List<Category> listOfCategory)
         {
             // TODO not case sensitive
-            bool result = true;
+            bool result = false;
             List<Category> existingCategory;
 
             try
@@ -109,7 +109,7 @@ namespace BusinessLogic
             }
             if ((existingCategory == null) || !existingCategory.Any())
             {
-                result = false;
+                result = true;
             }
             return result;
         }

@@ -8,9 +8,9 @@ namespace BusinessLogic.Controllers
 {
     public abstract class EntityController<T>
     {
-        public virtual void Create(string name)
+        public virtual bool Create(string name)
         {
-
+            return false;
         }
 
         public virtual bool Create(string name, string url, string category)

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Models;
 using BusinessLogic.Controllers;
+using System.Net.NetworkInformation;
 
 namespace ApplicationRss
 {
@@ -113,13 +114,18 @@ namespace ApplicationRss
 
         private void btnSaveCategory_Click(object sender, EventArgs e)
         {
-            // TODO: Look for duplicates
+            bool success = false;
+            
 
             if (btnSaveCategory.Text.Equals("Save category"))
             {
                 string categoryName = tbNewCategoryName.Text;
-                CategoryController.Create(categoryName);
-                UpdateListOfCategories();          
+                success = CategoryController.Create(categoryName);
+                if (success)
+                {
+                    UpdateListOfCategories();
+                }
+                          
             }
             else if(btnSaveCategory.Text.Equals("Save changes"))
             {
@@ -133,10 +139,12 @@ namespace ApplicationRss
                 ShowFeedsInListView();
                 btnSaveCategory.Text = "Save category";
             }
-
-            ShowCategoriesInListView();
-            ShowCategoriesInComboboxes();
-            tbNewCategoryName.Clear();
+            if (success)
+            {
+                ShowCategoriesInListView();
+                ShowCategoriesInComboboxes();
+                tbNewCategoryName.Clear();
+            }
         }
 
         private void btnEditCategory_Click(object sender, EventArgs e)
