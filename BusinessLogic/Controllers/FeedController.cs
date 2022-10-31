@@ -4,24 +4,43 @@ using System.Linq;
 using Models;
 using System.ServiceModel.Syndication;
 using System.Xml;
+using System.Windows.Forms;
+using BusinessLogic.Exceptions;
+using System;
 
 namespace BusinessLogic.Controllers
 {
     public class FeedController : EntityController<Feed>
     {
-         private FeedRepository FeedRepository;
-
+        private FeedRepository FeedRepository;
+        private Validator FeedValidator;
+        private MessageCreator MessageCreator;
         public FeedController()
         {
             FeedRepository = new FeedRepository();
+            FeedValidator = new Validator();
+            MessageCreator = new MessageCreator();
         }
 
         override
-        public void Create(string name, string url, string category)
+        public bool Create(string name, string url, string category)
         {
-            Feed feed = new Feed(name, url, category);
-            feed.ListOfEpisodes = CreateListOfEpisodes(url);
-            FeedRepository.Create(feed);
+            bool success = false;
+            string errorMessage = FeedValidator.ErrorMessageCreate(name, url, category, FeedRepository.ListOfFeeds);
+           
+            if (string.IsNullOrEmpty(errorMessage)) // empty error message = feed can be created
+            {
+                Feed feed = new Feed(name, url, category);
+                feed.ListOfEpisodes = CreateListOfEpisodes(url);
+                FeedRepository.Create(feed);
+
+                success = true;
+             }
+             else
+             {
+                 MessageCreator.ShowMessage(errorMessage);    
+             }
+            return success;
         }
 
         override
@@ -31,19 +50,37 @@ namespace BusinessLogic.Controllers
         }
 
         override
-        public void Update(string chosenFeed, string newName, string newUrl, string newCategory)
-        {          
+        public bool Update(string chosenFeed, string newName, string newUrl, string newCategory)
+        {
+            bool success = false;
+            string errorMessage = FeedValidator.ErrorMessageUpdate(newName, newUrl, newCategory, FeedRepository.ListOfFeeds);
+            Feed feed;
             List<Feed> feedToEdit = FeedRepository.ListOfFeeds.Where(x => x.Name.Equals(chosenFeed)).ToList();
-            Feed feed = feedToEdit[0];
-            if (feed.Url != newUrl)
+            try
+            {
+                feed = feedToEdit[0];
+            }
+            catch (IndexOutOfRangeException)
+            {
+                throw new IndexOutOfRangeException("Could not find feed to update.");
+            }
+            
+
+            if (string.IsNullOrEmpty(errorMessage))
             {
                 feed.ListOfEpisodes = CreateListOfEpisodes(newUrl);
-            }
-            feed.Name = newName;
-            feed.Url = newUrl;
-            feed.Category = newCategory;
+                feed.Name = newName;
+                feed.Url = newUrl;
+                feed.Category = newCategory;
+                FeedRepository.Update();
 
-            FeedRepository.Update();
+                success = true;
+            }
+            else
+            {
+                MessageCreator.ShowMessage(errorMessage);
+            }
+            return success;
         }
 
         override
@@ -90,14 +127,18 @@ namespace BusinessLogic.Controllers
             {
                 string episodeName = item.Title.Text;
 
-                // Check if episode is already saved
-                List<Episode> duplicateEpisode = feed.ListOfEpisodes.Where(x => x.Name.Equals(episodeName)).ToList();
+                //// Check if episode is already saved
+                //List<Episode> duplicateEpisode = feed.ListOfEpisodes.Where(x => x.Name.Equals(episodeName)).ToList();
                
-                if ((duplicateEpisode != null) && (!duplicateEpisode.Any())) // if not already saved
+                //if ((duplicateEpisode != null) && (!duplicateEpisode.Any())) // if not already saved
+                //{
+                if(FeedValidator.IsUniqueEpisode(episodeName, feed))
                 {
                     Episode episode = new Episode(item.Title.Text, item.Summary.Text);
                     listOfNewEpisodes.Add(episode);
                 }
+                    
+                
             }
             List<Episode> updatedListOfEpisodes = new List<Episode>();
 
@@ -152,9 +193,17 @@ namespace BusinessLogic.Controllers
         public List<Episode> CreateListOfEpisodes(string url)
         {
             List<Episode> listOfEpisodes = new List<Episode>();
-
-            XmlReader xmlReader = XmlReader.Create(url);
-            SyndicationFeed syndicationFeed = SyndicationFeed.Load(xmlReader);
+            SyndicationFeed syndicationFeed;
+            try
+            {
+                XmlReader xmlReader = XmlReader.Create(url);
+                syndicationFeed = SyndicationFeed.Load(xmlReader);
+            }
+            catch
+            {
+                throw new InvalidUrlException("Invalid URL.");
+            }
+            
 
             foreach (var item in syndicationFeed.Items)
             {

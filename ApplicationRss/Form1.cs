@@ -50,12 +50,13 @@ namespace ApplicationRss
             string url = tbUrl.Text;
             string name = tbFeedName.Text;
             string category = cbCategory.SelectedItem.ToString();
+            bool success = false;
             
 
             if (btnSaveFeed.Text.Equals("Save feed"))
             {
                 NameOfChosenFeed = name;
-                FeedController.Create(name, url, category);   
+                success = FeedController.Create(name, url, category);   
             }
             else if (btnSaveFeed.Text.Equals("Save changes"))
             {
@@ -65,18 +66,22 @@ namespace ApplicationRss
                 NameOfChosenFeed = name;
             }
 
-            UpdateListOfFeeds();
-            ShowFeedsInListView();
+            if (success)
+            {
+                UpdateListOfFeeds();
+                ShowFeedsInListView();
 
-            UpdateListOfEpisodes(name);
-            ShowEpisodesInListView();
-            
-            // Set name of feed as column header in Episodes listview
-            lvEpisodes.Columns[0].Text = name;
+                UpdateListOfEpisodes(name);
+                ShowEpisodesInListView();
 
-            tbUrl.Clear();
-            tbFeedName.Clear();
-            // TODO: clear combobox
+                // Set name of feed as column header in Episodes listview
+                lvEpisodes.Columns[0].Text = name;
+
+                tbUrl.Clear();
+                tbFeedName.Clear();
+                // TODO: clear combobox
+            }
+
         }
 
         private void btnEditFeed_Click(object sender, EventArgs e)

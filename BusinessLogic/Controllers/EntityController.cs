@@ -13,9 +13,9 @@ namespace BusinessLogic.Controllers
 
         }
 
-        public virtual void Create(string name, string url, string category)
+        public virtual bool Create(string name, string url, string category)
         {
-
+            return false;
         }
 
         public virtual List<T> ReadListFromFile()
@@ -23,9 +23,9 @@ namespace BusinessLogic.Controllers
             return null;
         }
 
-        public virtual void Update(string chosenFeed, string newName, string newUrl, string newCategory)
+        public virtual bool Update(string chosenFeed, string newName, string newUrl, string newCategory)
         {
-
+            return false;
         }
 
         public virtual void Update(string oldName, string newName)
