@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Models;
+using System;
 
 namespace BusinessLogic.Controllers
 {
@@ -42,19 +43,29 @@ namespace BusinessLogic.Controllers
         }
 
         override
-        public void Update(string oldName, string newName)
+        public bool Update(string oldName, string newName)
         {
+            bool success = false;
             List<Category> listOfCategories = CategoryRepository.ListOfCategories;
             if(Validator.IsUniqueName(newName, listOfCategories))
             {
                 List<Category> categoryToChange = listOfCategories.Where(x => x.Name.Equals(oldName)).ToList();
-                categoryToChange[0].Name = newName;
+                try
+                {
+                    categoryToChange[0].Name = newName;
+                }
+                catch (IndexOutOfRangeException)
+                {
+                    throw new IndexOutOfRangeException("Can not find chosen category.");
+                }
                 CategoryRepository.Update();
+                success = true;
             }
             else
             {
                 MessageCreator.ShowMessage(MessageCreator.NameExists());
-            } 
+            }
+            return success;
         }
 
         override

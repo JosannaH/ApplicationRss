@@ -28,9 +28,9 @@ namespace BusinessLogic.Controllers
             return false;
         }
 
-        public virtual void Update(string oldName, string newName)
+        public virtual bool Update(string oldName, string newName)
         {
-
+            return false;
         }
 
         public virtual void Delete(string name)
