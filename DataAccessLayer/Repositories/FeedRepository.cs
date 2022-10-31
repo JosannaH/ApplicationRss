@@ -34,7 +34,6 @@ namespace DataAccess
 
         public void Delete(List<Feed> listOfFeeds)
         {
-            //UpdateListOfFeeds(listOfFeeds);
             ListOfFeeds = listOfFeeds;
             Update();
         }
@@ -43,10 +42,5 @@ namespace DataAccess
         
             return File.Exists("Feeds.xml");
         }
-
-        //public void UpdateListOfFeeds(List<Feed> listOfFeeds)
-        //{
-        //    ListOfFeeds = listOfFeeds;
-        //}
     }
 }

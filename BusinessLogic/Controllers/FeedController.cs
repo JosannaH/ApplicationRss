@@ -93,7 +93,16 @@ namespace BusinessLogic.Controllers
         public Feed GetFeedByName(string feedName)
         {
             List<Feed> chosenFeed = FeedRepository.ListOfFeeds.Where(x => x.Name.Equals(feedName)).ToList();
-            Feed feed = chosenFeed[0];
+            Feed feed;
+            try
+            {
+                feed = chosenFeed[0];
+            }
+            catch (IndexOutOfRangeException)
+            {
+                throw new IndexOutOfRangeException("Can not find chosen feed.");
+            }
+            
             return feed;
         }
 
