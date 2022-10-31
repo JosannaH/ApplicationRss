@@ -60,7 +60,7 @@ namespace ApplicationRss
             }
             else if (btnSaveFeed.Text.Equals("Save changes"))
             {
-                FeedController.Update(NameOfChosenFeed, name, url, category);
+                success = FeedController.Update(NameOfChosenFeed, name, url, category);
                 btnSaveFeed.Text = "Save feed";
 
                 NameOfChosenFeed = name;
