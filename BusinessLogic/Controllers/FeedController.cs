@@ -4,7 +4,6 @@ using System.Linq;
 using Models;
 using System.ServiceModel.Syndication;
 using System.Xml;
-using System.Windows.Forms;
 using BusinessLogic.Exceptions;
 using System;
 
@@ -110,10 +109,14 @@ namespace BusinessLogic.Controllers
         {
             List<Episode> listOfEpisodes = new List<Episode>();
 
-            if (feedName != null)
-            {
                 List<Feed> feed = FeedRepository.ListOfFeeds.Where(x => x.Name.Equals(feedName)).ToList();
+            try
+            {
                 listOfEpisodes = feed[0].ListOfEpisodes;
+            }
+            catch (IndexOutOfRangeException)
+            {
+                throw new IndexOutOfRangeException("Could not find feed.");
             }
             return listOfEpisodes;
         }
@@ -125,36 +128,34 @@ namespace BusinessLogic.Controllers
 
         public List<Episode> UpdateEpisodesForOneFeed(Feed feed)
         {
-            // TODO: XmlException 
-            XmlReader xmlReader = XmlReader.Create(feed.Url);
-            SyndicationFeed syndicationFeed = SyndicationFeed.Load(xmlReader);
+            SyndicationFeed syndicationFeed;
+            try
+            {
+                XmlReader xmlReader = XmlReader.Create(feed.Url);
+                syndicationFeed = SyndicationFeed.Load(xmlReader);
+            }
+            catch (Exception)
+            {
+                throw new Exception("Could not get xml file from url.");
+            }
 
             List<Episode> listOfNewEpisodes = new List<Episode>();
 
-            // Loop through list of fetched episodes 
             foreach (var item in syndicationFeed.Items)
             {
                 string episodeName = item.Title.Text;
 
-                //// Check if episode is already saved
-                //List<Episode> duplicateEpisode = feed.ListOfEpisodes.Where(x => x.Name.Equals(episodeName)).ToList();
-               
-                //if ((duplicateEpisode != null) && (!duplicateEpisode.Any())) // if not already saved
-                //{
                 if(FeedValidator.IsUniqueEpisode(episodeName, feed))
                 {
                     Episode episode = new Episode(item.Title.Text, item.Summary.Text);
                     listOfNewEpisodes.Add(episode);
-                }
-                    
-                
+                } 
             }
             List<Episode> updatedListOfEpisodes = new List<Episode>();
 
             // The new episodes will be first in the list
             if ((updatedListOfEpisodes != null) && (!updatedListOfEpisodes.Any()))
             {
-
                 updatedListOfEpisodes = listOfNewEpisodes.Concat(feed.ListOfEpisodes).ToList();
             }            
             return updatedListOfEpisodes;
@@ -162,7 +163,7 @@ namespace BusinessLogic.Controllers
 
         public void UpdateEpisodesForAllFeeds(List<Feed> listOfFeeds)
         {
-            foreach (Feed feed in FeedRepository.ListOfFeeds)
+            foreach (Feed feed in listOfFeeds)
             {
                 feed.ListOfEpisodes = UpdateEpisodesForOneFeed(feed);
             }
@@ -212,7 +213,6 @@ namespace BusinessLogic.Controllers
             {
                 throw new InvalidUrlException("Invalid URL.");
             }
-            
 
             foreach (var item in syndicationFeed.Items)
             {
