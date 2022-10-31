@@ -74,6 +74,7 @@ namespace BusinessLogic
 
         public bool IsUniqueName(string name, List<Feed> listOfFeeds)
         {
+            // TODO not case sensitive
             bool result = true;
             List<Feed> existingFeed;
 
@@ -94,6 +95,7 @@ namespace BusinessLogic
 
         public bool IsUniqueName(string name, List<Category> listOfCategory)
         {
+            // TODO not case sensitive
             bool result = true;
             List<Category> existingCategory;
 
@@ -114,6 +116,7 @@ namespace BusinessLogic
 
         public bool IsUniqueUrl(string url, List<Feed> listOfFeed)
         {
+            // TODO not case sensitive
             bool result = true;
             List<Feed> existingUrl;
 

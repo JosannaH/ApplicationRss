@@ -154,6 +154,8 @@ namespace ApplicationRss
             UpdateListOfCategories();
             ShowCategoriesInComboboxes();
             ShowCategoriesInListView();
+            FeedController.DeleteFeedsWithCategory(category);
+            ListOfFeeds = FeedController.GetListOfAllFeeds();   
             ShowFeedsInListView();
           
             // TODO: Warning to user

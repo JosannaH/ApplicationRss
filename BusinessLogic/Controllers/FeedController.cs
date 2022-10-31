@@ -184,7 +184,8 @@ namespace BusinessLogic.Controllers
 
         public void DeleteFeedsWithCategory(string category)
         {
-            FeedRepository.ListOfFeeds = FeedRepository.ListOfFeeds.Where(x => x.Category != category).ToList();
+            List<Feed> updatedList = FeedRepository.ListOfFeeds.Where(x => x.Category != category).ToList();
+            FeedRepository.ListOfFeeds = updatedList;
             FeedRepository.Update();
         }
 

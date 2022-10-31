@@ -42,7 +42,7 @@ namespace BusinessLogic.Controllers
         {
             CategoryRepository.ListOfCategories = CategoryRepository.ListOfCategories.Where(x => x.Name != category).ToList();
             CategoryRepository.Update();
-            FeedController.DeleteFeedsWithCategory(category);
+           // FeedController.DeleteFeedsWithCategory(category);
         }
 
         public List<Category> GetListOfCategories()
