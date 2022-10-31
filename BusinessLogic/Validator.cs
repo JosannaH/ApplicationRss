@@ -1,16 +1,7 @@
-﻿
-
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Security.Policy;
-using System.ServiceModel.Syndication;
-using System.Windows.Forms;
 using BusinessLogic.Exceptions;
-using DataAccess;
 using Models;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace BusinessLogic
 {
@@ -31,9 +22,8 @@ namespace BusinessLogic
 
         public bool IsValidUrl(string url)
         {
+            // TODO IsValidUrl method
             bool result = true;
-
-
 
             //Uri uri;
             //result = Uri.TryCreate(url, UriKind.Absolute, out uri)
@@ -142,7 +132,7 @@ namespace BusinessLogic
             return result;
         }
 
-        public string ErrorMessageCreate(string name, string url, string category, List<Feed> listOfFeeds)
+        public string ErrorMessageCreateFeed(string name, string url, string category, List<Feed> listOfFeeds)
         {
             string message = "";
 
@@ -169,7 +159,7 @@ namespace BusinessLogic
             return message;
         }
 
-        public string ErrorMessageUpdate(string name, string url, string category, List<Feed> listOfFeeds)
+        public string ErrorMessageUpdateFeed(string name, string url, string category, List<Feed> listOfFeeds)
         {
             string message = "";
 

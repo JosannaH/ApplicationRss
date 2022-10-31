@@ -26,7 +26,7 @@ namespace BusinessLogic.Controllers
         public bool Create(string name, string url, string category)
         {
             bool success = false;
-            string errorMessage = FeedValidator.ErrorMessageCreate(name, url, category, FeedRepository.ListOfFeeds);
+            string errorMessage = FeedValidator.ErrorMessageCreateFeed(name, url, category, FeedRepository.ListOfFeeds);
            
             if (string.IsNullOrEmpty(errorMessage)) // empty error message = feed can be created
             {
@@ -53,7 +53,7 @@ namespace BusinessLogic.Controllers
         public bool Update(string chosenFeed, string newName, string newUrl, string newCategory)
         {
             bool success = false;
-            string errorMessage = FeedValidator.ErrorMessageUpdate(newName, newUrl, newCategory, FeedRepository.ListOfFeeds);
+            string errorMessage = FeedValidator.ErrorMessageUpdateFeed(newName, newUrl, newCategory, FeedRepository.ListOfFeeds);
             Feed feed;
             List<Feed> feedToEdit = FeedRepository.ListOfFeeds.Where(x => x.Name.Equals(chosenFeed)).ToList();
             try
