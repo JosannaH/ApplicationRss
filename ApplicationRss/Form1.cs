@@ -6,6 +6,9 @@ using System.Linq;
 using System.Windows.Forms;
 using Models;
 using BusinessLogic.Controllers;
+using System.Threading.Tasks;
+using BusinessLogic;
+using BusinessLogic.Exceptions;
 
 namespace ApplicationRss
 {
@@ -47,41 +50,50 @@ namespace ApplicationRss
 
         private void btnSaveFeed_Click(object sender, EventArgs e)
         {
-            string url = tbUrl.Text;
-            string name = tbFeedName.Text;
-            string category = cbCategory.SelectedItem.ToString();
-            bool success = false;
-            
-
-            if (btnSaveFeed.Text.Equals("Save feed"))
+            try
             {
-                NameOfChosenFeed = name;
-                success = FeedController.Create(name, url, category);   
+                string url = tbUrl.Text;
+                string name = tbFeedName.Text;
+                string category = cbCategory.SelectedItem.ToString();
+                bool success = false;
+
+                Validator validator = new Validator();
+                validator.IsValidUrl(url);
+
+
+                if (btnSaveFeed.Text.Equals("Save feed"))
+                {
+                    NameOfChosenFeed = name;
+                    success = FeedController.Create(name, url, category);
+                }
+                else if (btnSaveFeed.Text.Equals("Save changes"))
+                {
+                    success = FeedController.Update(NameOfChosenFeed, name, url, category);
+                    btnSaveFeed.Text = "Save feed";
+
+                    NameOfChosenFeed = name;
+                }
+
+                if (success)
+                {
+                    UpdateListOfFeeds();
+                    ShowFeedsInListView();
+
+                    UpdateListOfEpisodes(name);
+                    ShowEpisodesInListViewAsync();
+
+                    // Set name of feed as column header in Episodes listview
+                    lvEpisodes.Columns[0].Text = name;
+
+                    tbUrl.Clear();
+                    tbFeedName.Clear();
+                }
+
             }
-            else if (btnSaveFeed.Text.Equals("Save changes"))
+            catch (Exception)
             {
-                success = FeedController.Update(NameOfChosenFeed, name, url, category);
-                btnSaveFeed.Text = "Save feed";
-
-                NameOfChosenFeed = name;
+                InvalidUrlException.UrlException("undantag url");
             }
-
-            if (success)
-            {
-                UpdateListOfFeeds();
-                ShowFeedsInListView();
-
-                UpdateListOfEpisodes(name);
-                ShowEpisodesInListView();
-
-                // Set name of feed as column header in Episodes listview
-                lvEpisodes.Columns[0].Text = name;
-
-                tbUrl.Clear();
-                tbFeedName.Clear();
-                // TODO: clear combobox
-            }
-
         }
 
         private void btnEditFeed_Click(object sender, EventArgs e)
@@ -151,26 +163,41 @@ namespace ApplicationRss
             btnSaveCategory.Text = "Save changes";
         }
 
-        private void btnDeleteCategory_Click(object sender, EventArgs e)
+        private async void btnDeleteCategory_Click(object sender, EventArgs e)
         {
             string category = lvCategories.SelectedItems[0].Text;
 
-            CategoryController.Delete(category);
-            UpdateListOfCategories();
-            ShowCategoriesInComboboxes();
-            ShowCategoriesInListView();
-            FeedController.DeleteFeedsWithCategory(category);
-            ListOfFeeds = FeedController.GetListOfAllFeeds();   
-            ShowFeedsInListView();
-          
-            // TODO: Warning to user
+            bool confirmation = await ConfirmDeleteCategoryAsync(category);
+
+            if (confirmation)
+            {
+                CategoryController.Delete(category);
+                UpdateListOfCategories();
+                ShowCategoriesInComboboxes();
+                ShowCategoriesInListView();
+                FeedController.DeleteFeedsWithCategory(category);
+                ListOfFeeds = FeedController.GetListOfAllFeeds();
+                ShowFeedsInListView();
+            }
+        }
+
+        private async Task<bool> ConfirmDeleteCategoryAsync(string category)
+        {
+            bool result = false;
+            DialogResult answer = MessageBox.Show($"Do you want to delete {category} and all feeds in that category?", "Warning!", MessageBoxButtons.YesNo);
+            if(answer == DialogResult.Yes)
+            {
+                result = true;
+            }
+            await Task.Delay(3000);
+            return result;
         }
 
         private void lvFeeds_OnItemClick(object sender, EventArgs e)
         {
             NameOfChosenFeed = lvFeeds.SelectedItems[0].Text;
             ListOfEpisodes = FeedController.GetListOfEpisodesForFeed(NameOfChosenFeed);
-            ShowEpisodesInListView();
+            ShowEpisodesInListViewAsync();
 
             // Change text on Episode listview header, to the name if chosen feed
             lvEpisodes.Columns[0].Text = NameOfChosenFeed;
@@ -179,7 +206,13 @@ namespace ApplicationRss
         private void cbSortByCategory_SelectedIndexChanged(object sender, EventArgs e)
         {
             string category = cbSortByCategory.SelectedItem.ToString();
-            ShowFeedsInListViewByCategory(category);
+            if(category.Equals("All categories")){
+                ShowFeedsInListView();
+            }
+            else
+            {
+                ShowFeedsInListViewByCategory(category);
+            }
         }
 
         private void lvEpisodes_OnItemClick(object sender, EventArgs e)
@@ -202,7 +235,7 @@ namespace ApplicationRss
             }
         }
 
-        private void ShowEpisodesInListView()
+        private void ShowEpisodesInListViewAsync()
         {
             lvEpisodes.Items.Clear();
 
@@ -231,6 +264,7 @@ namespace ApplicationRss
             cbCategory.Items.Clear();
             cbSortByCategory.Items.Clear();
 
+            cbSortByCategory.Items.Add("All categories");
             foreach (Category category in ListOfCategories)
             {
                 cbCategory.Items.Add(category.Name);

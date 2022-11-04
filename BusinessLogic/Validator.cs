@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using BusinessLogic.Exceptions;
 using Models;
@@ -20,36 +21,22 @@ namespace BusinessLogic
             return result;
         }
 
-        public bool IsValidUrl(string url)
+        public void IsValidUrl(string url)
         {
-            // TODO IsValidUrl method
-            bool result = true;
-
-            //Uri uri;
-            //result = Uri.TryCreate(url, UriKind.Absolute, out uri)
-            //    && (uri.Scheme == Uri.UriSchemeHttps || uri.Scheme == Uri.UriSchemeHttp);
-
-
-            //Uri uri = new Uri(url);
-            //result = uri.IsWellFormedOriginalString();
-
-            //WebRequest request = WebRequest.Create(url);
-            //WebResponse response;
-            //
+            if (Uri.IsWellFormedUriString(url, UriKind.Absolute) == false) 
+            {
+                InvalidUrlException.UrlException("Fel url");
+            }
+            //bool result = false;
             //try
             //{
-            //    response = request.GetResponse();
+            //    result = Uri.IsWellFormedUriString(url, UriKind.Absolute);
             //}
-            //catch
+            //catch (UriFormatException)
             //{
             //    throw new InvalidUrlException("Invalid URL.");
             //}
-
-            //if(response == null) 
-            //{ 
-            //    result = false; 
-            //}
-            return result;
+            //    return result;
         }
 
         public bool IsUniqueEpisode(string episode, Feed feed)
@@ -74,13 +61,12 @@ namespace BusinessLogic
 
         public bool IsUniqueName(string name, List<Feed> listOfFeeds)
         {
-            // TODO make not case sensitive
             bool result = true;
             List<Feed> existingFeed;
 
             try
             {
-                existingFeed = listOfFeeds.Where(x => x.Name.Equals(name)).ToList();
+                existingFeed = listOfFeeds.Where(x => x.Name.ToLower().Equals(name.ToLower())).ToList();
             }
             catch (ListNotAccessableException)
             {
@@ -95,13 +81,12 @@ namespace BusinessLogic
 
         public bool IsUniqueName(string name, List<Category> listOfCategory)
         {
-            // TODO make not case sensitive
             bool result = false;
             List<Category> existingCategory;
 
             try
             {
-                existingCategory = listOfCategory.Where(x => x.Name.Equals(name)).ToList();
+                existingCategory = listOfCategory.Where(x => x.Name.ToLower().Equals(name.ToLower())).ToList();
             }
             catch (ListNotAccessableException)
             {
@@ -116,13 +101,12 @@ namespace BusinessLogic
 
         public bool IsUniqueUrl(string url, List<Feed> listOfFeed)
         {
-            // TODO make not case sensitive
             bool result = true;
             List<Feed> existingUrl;
 
             try
             {
-                existingUrl = listOfFeed.Where(x => x.Url.Equals(url)).ToList();
+                existingUrl = listOfFeed.Where(x => x.Url.ToLower().Equals(url.ToLower())).ToList();
             }
             catch (ListNotAccessableException)
             {
@@ -138,7 +122,7 @@ namespace BusinessLogic
         public string ErrorMessageCreateFeed(string name, string url, string category, List<Feed> listOfFeeds)
         {
             string message = "";
-
+ 
             bool nameHasValue = HasValue(name);
             if (!nameHasValue) { message += MessageCreator.EmptyName() + "\n"; }
 
@@ -150,8 +134,8 @@ namespace BusinessLogic
 
             if (nameHasValue && urlHasValue && categoryHasValue)
             {
-                bool urlIsValid = IsValidUrl(url);
-                if (!urlIsValid) { message += MessageCreator.InvalidUrl(); }
+                //bool urlIsValid = IsValidUrl(url);
+                //if (!urlIsValid) { message += MessageCreator.InvalidUrl(); }
 
                 bool urlIsDuplicate = IsUniqueUrl(url, listOfFeeds);
                 if (urlIsDuplicate) { message += MessageCreator.UrlExists() + "\n"; }
