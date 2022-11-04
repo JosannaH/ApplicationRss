@@ -195,7 +195,13 @@ namespace ApplicationRss
         private void cbSortByCategory_SelectedIndexChanged(object sender, EventArgs e)
         {
             string category = cbSortByCategory.SelectedItem.ToString();
-            ShowFeedsInListViewByCategory(category);
+            if(category.Equals("All categories")){
+                ShowFeedsInListView();
+            }
+            else
+            {
+                ShowFeedsInListViewByCategory(category);
+            }
         }
 
         private void lvEpisodes_OnItemClick(object sender, EventArgs e)
@@ -247,6 +253,7 @@ namespace ApplicationRss
             cbCategory.Items.Clear();
             cbSortByCategory.Items.Clear();
 
+            cbSortByCategory.Items.Add("All categories");
             foreach (Category category in ListOfCategories)
             {
                 cbCategory.Items.Add(category.Name);
