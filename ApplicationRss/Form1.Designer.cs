@@ -95,7 +95,7 @@ namespace ApplicationRss
             // columnFeedCategory
             // 
             this.columnFeedCategory.Text = "Category";
-            this.columnFeedCategory.Width = 121;
+            this.columnFeedCategory.Width = 115;
             // 
             // lvEpisodes
             // 
@@ -105,10 +105,10 @@ namespace ApplicationRss
             this.lvEpisodes.GridLines = true;
             this.lvEpisodes.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lvEpisodes.HideSelection = false;
-            this.lvEpisodes.Location = new System.Drawing.Point(535, 58);
+            this.lvEpisodes.Location = new System.Drawing.Point(512, 58);
             this.lvEpisodes.MultiSelect = false;
             this.lvEpisodes.Name = "lvEpisodes";
-            this.lvEpisodes.Size = new System.Drawing.Size(442, 329);
+            this.lvEpisodes.Size = new System.Drawing.Size(465, 329);
             this.lvEpisodes.TabIndex = 0;
             this.lvEpisodes.UseCompatibleStateImageBehavior = false;
             this.lvEpisodes.View = System.Windows.Forms.View.Details;
@@ -117,7 +117,7 @@ namespace ApplicationRss
             // columnEpisodeName
             // 
             this.columnEpisodeName.Text = "Episode";
-            this.columnEpisodeName.Width = 440;
+            this.columnEpisodeName.Width = 433;
             // 
             // lvCategories
             // 
@@ -130,7 +130,7 @@ namespace ApplicationRss
             this.lvCategories.Location = new System.Drawing.Point(23, 567);
             this.lvCategories.MultiSelect = false;
             this.lvCategories.Name = "lvCategories";
-            this.lvCategories.Size = new System.Drawing.Size(237, 87);
+            this.lvCategories.Size = new System.Drawing.Size(237, 156);
             this.lvCategories.TabIndex = 2;
             this.lvCategories.UseCompatibleStateImageBehavior = false;
             this.lvCategories.View = System.Windows.Forms.View.Details;
@@ -138,7 +138,7 @@ namespace ApplicationRss
             // columnCategoryName
             // 
             this.columnCategoryName.Text = "";
-            this.columnCategoryName.Width = 237;
+            this.columnCategoryName.Width = 230;
             // 
             // btnSaveFeed
             // 
@@ -172,7 +172,7 @@ namespace ApplicationRss
             // 
             // btnDeleteCategory
             // 
-            this.btnDeleteCategory.Location = new System.Drawing.Point(143, 660);
+            this.btnDeleteCategory.Location = new System.Drawing.Point(143, 729);
             this.btnDeleteCategory.Name = "btnDeleteCategory";
             this.btnDeleteCategory.Size = new System.Drawing.Size(117, 23);
             this.btnDeleteCategory.TabIndex = 8;
@@ -232,9 +232,9 @@ namespace ApplicationRss
             // 
             // tbEpisodeSummary
             // 
-            this.tbEpisodeSummary.Location = new System.Drawing.Point(535, 445);
+            this.tbEpisodeSummary.Location = new System.Drawing.Point(512, 445);
             this.tbEpisodeSummary.Name = "tbEpisodeSummary";
-            this.tbEpisodeSummary.Size = new System.Drawing.Size(442, 238);
+            this.tbEpisodeSummary.Size = new System.Drawing.Size(465, 307);
             this.tbEpisodeSummary.TabIndex = 17;
             this.tbEpisodeSummary.Text = "";
             // 
@@ -242,7 +242,7 @@ namespace ApplicationRss
             // 
             this.lblEpisodes.AutoSize = true;
             this.lblEpisodes.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.lblEpisodes.Location = new System.Drawing.Point(533, 30);
+            this.lblEpisodes.Location = new System.Drawing.Point(507, 30);
             this.lblEpisodes.Name = "lblEpisodes";
             this.lblEpisodes.Size = new System.Drawing.Size(93, 25);
             this.lblEpisodes.TabIndex = 18;
@@ -262,7 +262,7 @@ namespace ApplicationRss
             // 
             this.lblEpisodeDescription.AutoSize = true;
             this.lblEpisodeDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.lblEpisodeDescription.Location = new System.Drawing.Point(533, 417);
+            this.lblEpisodeDescription.Location = new System.Drawing.Point(507, 419);
             this.lblEpisodeDescription.Name = "lblEpisodeDescription";
             this.lblEpisodeDescription.Size = new System.Drawing.Size(185, 25);
             this.lblEpisodeDescription.TabIndex = 20;
@@ -343,7 +343,7 @@ namespace ApplicationRss
             // 
             // btnEditCategory
             // 
-            this.btnEditCategory.Location = new System.Drawing.Point(23, 660);
+            this.btnEditCategory.Location = new System.Drawing.Point(23, 729);
             this.btnEditCategory.Name = "btnEditCategory";
             this.btnEditCategory.Size = new System.Drawing.Size(114, 23);
             this.btnEditCategory.TabIndex = 29;
@@ -355,7 +355,7 @@ namespace ApplicationRss
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1005, 707);
+            this.ClientSize = new System.Drawing.Size(1005, 764);
             this.Controls.Add(this.btnEditCategory);
             this.Controls.Add(this.cbSortByCategory);
             this.Controls.Add(this.lblSortByCategory);

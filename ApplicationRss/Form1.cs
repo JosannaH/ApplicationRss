@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Models;
 using BusinessLogic.Controllers;
+using System.Threading.Tasks;
 
 namespace ApplicationRss
 {
@@ -45,42 +46,46 @@ namespace ApplicationRss
             }
         }
 
-        private void btnSaveFeed_Click(object sender, EventArgs e)
+        private async void btnSaveFeed_Click(object sender, EventArgs e)
         {
-            string url = tbUrl.Text;
-            string name = tbFeedName.Text;
-            string category = cbCategory.SelectedItem.ToString();
-            bool success = false;
+            //await SaveFeedAsync();
+            Task taskSave = SaveFeedAsync();
+            await taskSave;
+
+            //string url = tbUrl.Text;
+            //string name = tbFeedName.Text;
+            //string category = cbCategory.SelectedItem.ToString();
+            //bool success = false;
             
 
-            if (btnSaveFeed.Text.Equals("Save feed"))
-            {
-                NameOfChosenFeed = name;
-                success = FeedController.Create(name, url, category);   
-            }
-            else if (btnSaveFeed.Text.Equals("Save changes"))
-            {
-                success = FeedController.Update(NameOfChosenFeed, name, url, category);
-                btnSaveFeed.Text = "Save feed";
+            //if (btnSaveFeed.Text.Equals("Save feed"))
+            //{
+            //    NameOfChosenFeed = name;
+            //    success = FeedController.Create(name, url, category);   
+            //}
+            //else if (btnSaveFeed.Text.Equals("Save changes"))
+            //{
+            //    success = FeedController.Update(NameOfChosenFeed, name, url, category);
+            //    btnSaveFeed.Text = "Save feed";
 
-                NameOfChosenFeed = name;
-            }
+            //    NameOfChosenFeed = name;
+            //}
 
-            if (success)
-            {
-                UpdateListOfFeeds();
-                ShowFeedsInListView();
+            //if (success)
+            //{
+            //    UpdateListOfFeeds();
+            //    ShowFeedsInListView();
 
-                UpdateListOfEpisodes(name);
-                ShowEpisodesInListView();
+            //    UpdateListOfEpisodes(name);
+            //    ShowEpisodesInListView();
 
-                // Set name of feed as column header in Episodes listview
-                lvEpisodes.Columns[0].Text = name;
+            //    // Set name of feed as column header in Episodes listview
+            //    lvEpisodes.Columns[0].Text = name;
 
-                tbUrl.Clear();
-                tbFeedName.Clear();
-                // TODO: clear combobox
-            }
+            //    tbUrl.Clear();
+            //    tbFeedName.Clear();
+            //    // TODO: clear combobox
+            //}
 
         }
 
@@ -188,6 +193,46 @@ namespace ApplicationRss
             ShowEpisodeDescriptionInTextBox(nameOfChosenEpisode);
         }
 
+        private async Task SaveFeedAsync()
+        {
+            string url = tbUrl.Text;
+            string name = tbFeedName.Text;
+            string category = cbCategory.SelectedItem.ToString();
+            bool success = false;
+
+
+            if (btnSaveFeed.Text.Equals("Save feed"))
+            {
+                NameOfChosenFeed = name;
+                success = FeedController.Create(name, url, category);
+            }
+            else if (btnSaveFeed.Text.Equals("Save changes"))
+            {
+                success = FeedController.Update(NameOfChosenFeed, name, url, category);
+                btnSaveFeed.Text = "Save feed";
+
+                NameOfChosenFeed = name;
+            }
+
+            if (success)    
+            {
+                await Task.Delay(10000);
+                UpdateListOfFeeds();
+                ShowFeedsInListView();
+
+                UpdateListOfEpisodes(name);
+                await ShowEpisodesInListView();
+
+                // Set name of feed as column header in Episodes listview
+                lvEpisodes.Columns[0].Text = name;
+
+                tbUrl.Clear();
+                tbFeedName.Clear();
+                // TODO: clear combobox
+            }
+
+        }
+
         private void ShowFeedsInListView()
         {
             lvFeeds.Items.Clear();
@@ -202,9 +247,12 @@ namespace ApplicationRss
             }
         }
 
-        private void ShowEpisodesInListView()
+        private async Task ShowEpisodesInListView()
         {
             lvEpisodes.Items.Clear();
+
+            await Task.Delay(2000);
+
 
             foreach (Episode episode in ListOfEpisodes)
             {
