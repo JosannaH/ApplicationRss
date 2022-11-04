@@ -50,17 +50,15 @@ namespace ApplicationRss
 
         private void btnSaveFeed_Click(object sender, EventArgs e)
         {
-            try
-            {
                 string url = tbUrl.Text;
                 string name = tbFeedName.Text;
                 string category = cbCategory.SelectedItem.ToString();
                 bool success = false;
 
                 Validator validator = new Validator();
-                validator.IsValidUrl(url);
+                bool urlIsValid = validator.IsValidUrl(url);
 
-
+            if (urlIsValid) {
                 if (btnSaveFeed.Text.Equals("Save feed"))
                 {
                     NameOfChosenFeed = name;
@@ -88,11 +86,6 @@ namespace ApplicationRss
                     tbUrl.Clear();
                     tbFeedName.Clear();
                 }
-
-            }
-            catch (Exception)
-            {
-                InvalidUrlException.UrlException("undantag url");
             }
         }
 

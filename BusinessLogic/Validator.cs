@@ -21,22 +21,14 @@ namespace BusinessLogic
             return result;
         }
 
-        public void IsValidUrl(string url)
+        public bool IsValidUrl(string url)
         {
-            if (Uri.IsWellFormedUriString(url, UriKind.Absolute) == false) 
+            bool result = Uri.IsWellFormedUriString(url, UriKind.Absolute);
+            if (result == false) 
             {
                 InvalidUrlException.UrlException("Fel url");
             }
-            //bool result = false;
-            //try
-            //{
-            //    result = Uri.IsWellFormedUriString(url, UriKind.Absolute);
-            //}
-            //catch (UriFormatException)
-            //{
-            //    throw new InvalidUrlException("Invalid URL.");
-            //}
-            //    return result;
+            return result;
         }
 
         public bool IsUniqueEpisode(string episode, Feed feed)
@@ -134,9 +126,6 @@ namespace BusinessLogic
 
             if (nameHasValue && urlHasValue && categoryHasValue)
             {
-                //bool urlIsValid = IsValidUrl(url);
-                //if (!urlIsValid) { message += MessageCreator.InvalidUrl(); }
-
                 bool urlIsDuplicate = IsUniqueUrl(url, listOfFeeds);
                 if (urlIsDuplicate) { message += MessageCreator.UrlExists() + "\n"; }
 

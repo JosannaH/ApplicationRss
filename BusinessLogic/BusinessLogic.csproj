@@ -54,6 +54,7 @@
     <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\EntityController.cs" />
     <Compile Include="Controllers\FeedController.cs" />
+    <Compile Include="Exceptions\FileNotFoundException.cs" />
     <Compile Include="Exceptions\ListNotAccessableException.cs" />
     <Compile Include="Exceptions\InvalidUrlException.cs" />
     <Compile Include="MessageCreator.cs" />

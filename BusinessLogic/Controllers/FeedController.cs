@@ -128,15 +128,16 @@ namespace BusinessLogic.Controllers
 
         public List<Episode> UpdateEpisodesForOneFeed(Feed feed)
         {
-            SyndicationFeed syndicationFeed;
+            SyndicationFeed syndicationFeed = new SyndicationFeed();
             try
             {
                 XmlReader xmlReader = XmlReader.Create(feed.Url);
                 syndicationFeed = SyndicationFeed.Load(xmlReader);
             }
-            catch (Exception)
+            catch
             {
-                throw new Exception("Could not get xml file from url.");
+                FileNotFoundException.FileNotFound("File not found");
+                
             }
 
             List<Episode> listOfNewEpisodes = new List<Episode>();
@@ -204,7 +205,7 @@ namespace BusinessLogic.Controllers
         public List<Episode> CreateListOfEpisodes(string url)
         {
             List<Episode> listOfEpisodes = new List<Episode>();
-            SyndicationFeed syndicationFeed;
+            SyndicationFeed syndicationFeed = new SyndicationFeed();
             try
             {
                 XmlReader xmlReader = XmlReader.Create(url);
