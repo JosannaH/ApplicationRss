@@ -6,6 +6,7 @@ using System.ServiceModel.Syndication;
 using System.Xml;
 using BusinessLogic.Exceptions;
 using System;
+using System.Windows.Forms;
 
 namespace BusinessLogic.Controllers
 {
@@ -211,7 +212,7 @@ namespace BusinessLogic.Controllers
             }
             catch
             {
-                throw new InvalidUrlException("Invalid URL.");
+                InvalidUrlException.UrlException("Invalid URL.");
             }
 
             foreach (var item in syndicationFeed.Items)

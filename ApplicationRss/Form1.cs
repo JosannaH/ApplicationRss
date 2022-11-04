@@ -7,6 +7,8 @@ using System.Windows.Forms;
 using Models;
 using BusinessLogic.Controllers;
 using System.Threading.Tasks;
+using BusinessLogic;
+using BusinessLogic.Exceptions;
 
 namespace ApplicationRss
 {
@@ -48,41 +50,50 @@ namespace ApplicationRss
 
         private void btnSaveFeed_Click(object sender, EventArgs e)
         {
-            string url = tbUrl.Text;
-            string name = tbFeedName.Text;
-            string category = cbCategory.SelectedItem.ToString();
-            bool success = false;
-
-
-            if (btnSaveFeed.Text.Equals("Save feed"))
+            try
             {
-                NameOfChosenFeed = name;
-                success = FeedController.Create(name, url, category);
+                string url = tbUrl.Text;
+                string name = tbFeedName.Text;
+                string category = cbCategory.SelectedItem.ToString();
+                bool success = false;
+
+                Validator validator = new Validator();
+                validator.IsValidUrl(url);
+
+
+                if (btnSaveFeed.Text.Equals("Save feed"))
+                {
+                    NameOfChosenFeed = name;
+                    success = FeedController.Create(name, url, category);
+                }
+                else if (btnSaveFeed.Text.Equals("Save changes"))
+                {
+                    success = FeedController.Update(NameOfChosenFeed, name, url, category);
+                    btnSaveFeed.Text = "Save feed";
+
+                    NameOfChosenFeed = name;
+                }
+
+                if (success)
+                {
+                    UpdateListOfFeeds();
+                    ShowFeedsInListView();
+
+                    UpdateListOfEpisodes(name);
+                    ShowEpisodesInListViewAsync();
+
+                    // Set name of feed as column header in Episodes listview
+                    lvEpisodes.Columns[0].Text = name;
+
+                    tbUrl.Clear();
+                    tbFeedName.Clear();
+                }
+
             }
-            else if (btnSaveFeed.Text.Equals("Save changes"))
+            catch (Exception)
             {
-                success = FeedController.Update(NameOfChosenFeed, name, url, category);
-                btnSaveFeed.Text = "Save feed";
-
-                NameOfChosenFeed = name;
+                InvalidUrlException.UrlException("undantag url");
             }
-
-            if (success)
-            {
-                UpdateListOfFeeds();
-                ShowFeedsInListView();
-
-                UpdateListOfEpisodes(name);
-                ShowEpisodesInListViewAsync();
-
-                // Set name of feed as column header in Episodes listview
-                lvEpisodes.Columns[0].Text = name;
-
-                tbUrl.Clear();
-                tbFeedName.Clear();
-                // TODO: clear combobox
-            }
-
         }
 
         private void btnEditFeed_Click(object sender, EventArgs e)
