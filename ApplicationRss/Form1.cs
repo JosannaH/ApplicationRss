@@ -156,11 +156,11 @@ namespace ApplicationRss
             btnSaveCategory.Text = "Save changes";
         }
 
-        private async void btnDeleteCategory_Click(object sender, EventArgs e)
+        private void btnDeleteCategory_Click(object sender, EventArgs e)
         {
             string category = lvCategories.SelectedItems[0].Text;
 
-            bool confirmation = await ConfirmDeleteCategoryAsync(category);
+            bool confirmation = ConfirmDeleteCategory(category);
 
             if (confirmation)
             {
@@ -174,7 +174,7 @@ namespace ApplicationRss
             }
         }
 
-        private async Task<bool> ConfirmDeleteCategoryAsync(string category)
+        private bool ConfirmDeleteCategory(string category)
         {
             bool result = false;
             DialogResult answer = MessageBox.Show($"Do you want to delete {category} and all feeds in that category?", "Warning!", MessageBoxButtons.YesNo);
@@ -182,7 +182,6 @@ namespace ApplicationRss
             {
                 result = true;
             }
-            await Task.Delay(3000);
             return result;
         }
 
